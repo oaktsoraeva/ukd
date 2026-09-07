@@ -705,6 +705,25 @@ body {
   gap: var(--spacing-0-5x);
 }
 
+/* Скруглены только четыре внешних угла карточки: на стыках в макете
+   4827:109373 края идут прямой линией, без вырезов */
+.ukd-item > * {
+  border-radius: 0;
+}
+
+.ukd-item > *:first-child {
+  border-radius: var(--rounding-3x) var(--rounding-3x) 0 0;
+}
+
+.ukd-item > *:last-child {
+  border-radius: 0 0 var(--rounding-3x) var(--rounding-3x);
+}
+
+/* Ряд полей всегда внутри карточки, поэтому все четыре плашки квадратные */
+.ukd-item .ukd-field-grid > * {
+  border-radius: 0;
+}
+
 /* Количество · Ед. измерения · Цена · НДС — четыре поля в ряд */
 .ukd-field-grid {
   display: grid;
@@ -718,7 +737,6 @@ body {
 .ukd-item__row {
   margin: 0;
   padding: var(--spacing-3x) var(--spacing-5x);
-  border-radius: var(--rounding-3x);
   background: var(--container-transparent-1);
   color: var(--primitive-secondary);
 }
