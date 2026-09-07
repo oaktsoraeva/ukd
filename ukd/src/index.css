@@ -372,6 +372,15 @@ body {
 }
 
 
+/* Разделитель над подписью поля: в макетах он светлее китового —
+   #dcdcdc на плашке против #c7c7c7. Кит берёт translucent-neutral-2 (20%),
+   а в узлах 4788:89264 и 4827:109373 это container-transparent-2 (10%).
+   Состояние ошибки не трогаем: там разделитель красный и вдвое толще */
+.input:not(.input--error) .input__divider::before,
+.dropdown:not(.dropdown--error) .dropdown__divider::before {
+  background: var(--container-transparent-2);
+}
+
 /* Icon-only кнопки (в UI-ките такого компонента нет) */
 
 .icon-button {
