@@ -9,7 +9,6 @@ import type {
   Contractor,
   CorrectionBlockId,
   ItemValues,
-  ListDocument,
   SourceDoc,
   SourceDocStatus,
   Unit,
@@ -330,85 +329,8 @@ export const SOURCE_DOCS: SourceDoc[] = [
  */
 export const FAILING_SOURCE_DOC_ID = 'sf-3'
 
-/* ───── Экран списка «Документооборот» (узел 4450:88803) ─────────────── */
-
-export const LIST_DOCUMENTS: ListDocument[] = [
-  {
-    // Строка под чип «На подпись»: без неё фильтр не на чем показать
-    id: 'l-0',
-    kind: 'invoice',
-    direction: 'incoming',
-    title: 'Счёт-фактура №4 от 20.01.2027',
-    contractorId: 'kashin',
-    date: '20.01.2027',
-    amount: '340 000 ₽',
-    vat: '34 000 ₽',
-    status: 'awaiting_client',
-    sourceDocId: null,
-  },
-  {
-    id: 'l-1',
-    kind: 'upd',
-    direction: 'outgoing',
-    title: 'УПД №1 от 01.01.2027',
-    contractorId: 'stroyinvest',
-    date: '01.01.2027',
-    amount: '1 000 000 ₽',
-    vat: '100 000 ₽',
-    status: 'annulled',
-    sourceDocId: 'upd-1',
-  },
-  {
-    id: 'l-2',
-    kind: 'upd',
-    direction: 'outgoing',
-    title: 'УПД №1 от 01.01.2027',
-    contractorId: 'stroyinvest',
-    date: '01.01.2027',
-    amount: '1 000 000 ₽',
-    vat: '100 000 ₽',
-    status: 'rejected',
-    sourceDocId: 'upd-1',
-  },
-  {
-    id: 'l-3',
-    kind: 'upd',
-    direction: 'outgoing',
-    title: 'УПД №1 от 01.01.2027',
-    contractorId: 'stroyinvest',
-    date: '01.01.2027',
-    amount: '1 000 000 ₽',
-    vat: '100 000 ₽',
-    status: 'withdrawn',
-    sourceDocId: 'upd-1',
-  },
-  {
-    id: 'l-4',
-    kind: 'invoice',
-    direction: 'outgoing',
-    title: 'Счёт-фактура №1 от 01.01.2027',
-    contractorId: 'stroyinvest',
-    date: '01.01.2027',
-    amount: '1 000 000 ₽',
-    vat: '100 000 ₽',
-    status: 'annulment_in_progress',
-    sourceDocId: 'sf-1',
-  },
-  {
-    id: 'l-5',
-    kind: 'upd',
-    direction: 'incoming',
-    title: 'УПД №2 от 15.01.2027',
-    contractorId: 'iskra',
-    date: '15.01.2027',
-    amount: '1 000 000 ₽',
-    vat: '100 000 ₽',
-    status: 'signed',
-    sourceDocId: 'upd-2',
-  },
-]
-
 export const REQUEST_ERROR = 'Что-то не так… Попробуйте ещё раз.'
+
 /**
  * Подпись и логотип статуса в справочнике «Основание УКД» — стикер 4827:91380.
  * Логотипы готовые, из ~/Documents/Claude/Логотипы: в них уже зашита и
