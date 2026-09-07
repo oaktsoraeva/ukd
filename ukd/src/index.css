@@ -1,0 +1,901 @@
+@import "../../design-system/src/assets/Style/color.css";
+@import "../../design-system/src/assets/Style/font.css";
+@import "../../design-system/src/assets/Style/radius.css";
+@import "../../design-system/src/assets/Style/spacing.css";
+@import "../../design-system/src/assets/Style/shadow.css";
+@import "../../design-system/src/assets/Style/animation.css";
+@import "../../design-system/src/assets/Icon/icon.css";
+
+:root {
+  --font-family-tt-norms-tochka-extended: "TT Norms Tochka Extended", sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--page-primary);
+  color: var(--primitive-primary);
+  font-family: var(--font-family-tt-norms-tochka-extended);
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* В макете аватар клиента категорийного цвета, а в ките по умолчанию брендовый */
+.main-page-navigation-bar__avatar {
+  background-color: var(--category-indigo);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Каркас шага визарда ──────────────────────────────────────────────
+   Узлы 4574:111328 / 4583:145281: заголовок, за ним группы блоков,
+   вертикальный ритм 32px между группами */
+
+.ukd-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--content-group-list-spacing);
+}
+
+/* Заголовок с подзаголовком — своя группа с отступом 8px внутри,
+   чтобы до следующего блока сохранялся общий ритм страницы */
+.ukd-page__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2x);
+}
+
+.ukd-page__title,
+.ukd-page__subtitle {
+  margin: 0;
+}
+
+.ukd-page__subtitle {
+  color: var(--primitive-secondary);
+}
+
+.ukd-page__placeholder {
+  padding: var(--spacing-16x) 0;
+  text-align: center;
+  color: var(--primitive-secondary);
+}
+
+/* Группа: заголовок блока + содержимое. Внутри 16px (узел 4574:131537) */
+.ukd-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--content-element-list-spacing);
+}
+
+.ukd-group__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1x);
+}
+
+.ukd-group__title,
+.ukd-group__subtitle {
+  margin: 0;
+}
+
+.ukd-group__subtitle {
+  color: var(--primitive-secondary);
+}
+
+/* ── Чеклист «Что изменилось» — узел 4788:107434 ─────────────────────
+   Стопка FormCell без зазоров: вариант stack-* сам рисует разделители */
+
+.ukd-checklist {
+  display: flex;
+  flex-direction: column;
+}
+
+.ukd-checklist__row {
+  cursor: pointer;
+}
+
+/* Ошибка на группу, а не на поле: в ките таких нет (узел 4788:109961) */
+.ukd-group__error {
+  margin: 0;
+  color: var(--primitive-error);
+}
+
+/* Два поля в одну строку: 332 + 16 + 332 в колонке 680 (узел 4574:111333) */
+.ukd-field-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--content-element-list-spacing);
+}
+
+.ukd-field-row > *:only-child {
+  grid-column: 1 / -1;
+}
+
+/* ── Дроверы ──────────────────────────────────────────────────────────
+   В UI-ките у Drawer нет собственных отступов контента.
+   Раскладка узла 4580:137731: 32px сверху, 20px по бокам,
+   32px между шапкой-сводкой и полями */
+
+.drawer-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--content-group-list-spacing);
+  padding: var(--page-top-padding) var(--page-horizontal-padding) var(--page-bottom-padding);
+}
+
+/* Поля внутри дровера идут с зазором 16px */
+.ukd-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--content-element-list-spacing);
+}
+
+/* Счётчик символов в шапке поля — узел 4574:110642.
+   Стили сняты с .text-area__counter, чтобы совпадать с китовым TextArea */
+.ukd-counter {
+  margin: 0 0 0 auto;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+  letter-spacing: 0.01em;
+  color: var(--primitive-secondary);
+  white-space: nowrap;
+}
+
+.ukd-counter--over {
+  color: var(--primitive-error);
+}
+
+/* Многострочное поле: растёт по контенту, но не даёт себя тянуть мышью */
+.ukd-counter-input__field {
+  display: block;
+  min-height: 20px;
+  resize: none;
+  overflow: hidden;
+  field-sizing: content;
+}
+
+/* ── Календарь (узел 4593:170120) ─────────────────────────────────────
+   В UI-ките календаря нет. Поповер позиционируется в .ukd-date,
+   без портала — так он работает и внутри Drawer */
+
+.ukd-date {
+  position: relative;
+}
+
+/* Input красит слот right в брендовый, а иконка календаря в макете серая */
+.ukd-date__icon {
+  color: var(--primitive-neutral-4);
+}
+
+.ukd-calendar {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + var(--spacing-2x));
+  left: 0;
+  width: 100%;
+  min-width: 280px;
+  padding: var(--spacing-4x) var(--spacing-5x) var(--spacing-2x);
+  border-radius: var(--popup-rounding-strong);
+  background: var(--popup-primary);
+  box-shadow: var(--Popup-Inverse);
+}
+
+.ukd-calendar__weekdays,
+.ukd-calendar__grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: var(--spacing-1x);
+}
+
+.ukd-calendar__weekday {
+  padding-bottom: var(--spacing-2x);
+  text-align: center;
+  color: var(--primitive-secondary);
+}
+
+.ukd-calendar__weekday--weekend,
+.ukd-calendar__day--weekend {
+  color: var(--primitive-error);
+}
+
+/* Прокручиваемый список месяцев, как в макете */
+.ukd-calendar__scroll {
+  max-height: 300px;
+  overflow-y: auto;
+  scroll-behavior: auto;
+}
+
+.ukd-calendar__month + .ukd-calendar__month {
+  margin-top: var(--spacing-4x);
+}
+
+.ukd-calendar__title {
+  margin: 0 0 var(--spacing-2x);
+  color: var(--primitive-primary);
+}
+
+.ukd-calendar__day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--primitive-primary);
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.ukd-calendar__day:hover {
+  background: var(--container-transparent-1);
+}
+
+.ukd-calendar__day--selected {
+  background: var(--bg-brand);
+  color: var(--primitive-default);
+}
+
+.ukd-calendar__day--selected.ukd-calendar__day--weekend {
+  color: var(--primitive-default);
+}
+
+/* Карточка действий на шаге «Позиции» — узел 4583:145281 */
+.ukd-actions-card {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Иконки действий в макете брендовые, а ActionFormCell красит их в primary */
+.ukd-actions-card .action-form-cell__left {
+  color: var(--primitive-brand);
+}
+
+/* ── Уведомления и результат ──────────────────────────────────────────
+   Китовый Alert фиксируется у top: 0 и перекрыл бы верхнюю навигацию.
+   Опускаем его на её высоту (узел 4580:139012) */
+.ukd-alert-slot .alert__wrapper {
+  top: 74px;
+}
+
+/* Внутри дровера алерт встаёт в поток под шапкой (узел 4580:138863) */
+.ukd-drawer-alert .alert__wrapper {
+  position: static;
+}
+
+/* Modal сам даёт горизонтальные отступы контенту — обнуляем,
+   раскладку задаёт .ukd-result (узел 4624:91118) */
+.ukd-result-modal .modal__content-inner {
+  padding: 0;
+}
+
+.ukd-result {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8x);
+  padding: var(--spacing-2x) var(--spacing-8x) var(--spacing-6x);
+}
+
+.ukd-result__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4x);
+}
+
+.ukd-result__title,
+.ukd-result__text {
+  margin: 0;
+}
+
+.ukd-result__text {
+  color: var(--primitive-primary);
+}
+
+.ukd-result__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6x);
+}
+
+/* ── Экран списка «Документооборот» (узел 4450:88803) ────────────────── */
+
+.ukd-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--content-element-list-spacing);
+  padding: 0 var(--page-horizontal-padding);
+}
+
+.ukd-list__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-5x);
+}
+
+.ukd-list__actions-group {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2-5x);
+}
+
+/* Header Button без подписи: убираем зазор до пустого лейбла */
+.ukd-list__icon-action .header-button {
+  gap: 0;
+}
+
+/* В макете поиск во всю ширину и выше стандартного (узел 4450:88803) */
+.ukd-list__search .search-bar {
+  height: 44px;
+  padding: 0 var(--spacing-5x);
+  border-radius: var(--rounding-3x);
+}
+
+.ukd-list__toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2-5x);
+}
+
+.ukd-list__toolbar-tail {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2-5x);
+  margin-left: auto;
+}
+
+/* Search bar (в UI-ките нет отдельного компонента) */
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2-5x);
+  height: 32px;
+  padding: 0 var(--spacing-2-5x);
+  border-radius: var(--rounding-2-5x);
+  background: var(--container-transparent-1);
+}
+
+.search-bar__icon {
+  color: var(--primitive-neutral-4);
+  flex-shrink: 0;
+}
+
+.search-bar__field {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-family: inherit;
+  color: var(--primitive-primary);
+}
+
+.search-bar__field::placeholder {
+  color: var(--primitive-neutral-4);
+  opacity: 1;
+}
+
+/* Icon-only кнопки (в UI-ките такого компонента нет) */
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 0;
+  background: var(--container-transparent-1);
+  color: var(--primitive-primary);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.icon-button:hover {
+  background: var(--state-container-transparent-1-active);
+}
+
+.icon-button--32 {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--rounding-2x);
+}
+
+/* Колонки таблицы из макета: чекбокс 64 · Документ flex · Контрагент flex ·
+   Дата 120 · Сумма 140 · в 1С 80 · меню 64 */
+.ukd-table {
+  --ukd-table-columns: 64px minmax(0, 1.2fr) minmax(0, 1fr) 120px 140px 80px 64px;
+}
+
+/* В ките .table-cell центрирует контент по вертикали и по левому краю */
+.table-cell.ukd-cell--center {
+  justify-content: center;
+}
+
+.table-cell.ukd-cell--action {
+  padding-top: var(--spacing-2x);
+  padding-bottom: var(--spacing-2x);
+}
+
+.table-cell.ukd-cell--center-text .table-cell__content {
+  align-items: center;
+}
+
+.table-cell.ukd-cell--right .table-cell__content {
+  align-items: flex-end;
+}
+
+.ukd-cell__menu {
+  color: var(--primitive-primary);
+}
+
+/* Статус документа стоит под названием и красится по смыслу (узел 4450:88803) */
+.ukd-status--signed {
+  color: var(--primitive-success);
+}
+
+.ukd-status--pending {
+  color: var(--primitive-secondary);
+}
+
+.ukd-status--danger {
+  color: var(--primitive-error);
+}
+
+
+.ukd-doc-types {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.ukd-doc-types .ds-cell {
+  cursor: pointer;
+}
+
+.ukd-doc-types__icon {
+  color: var(--primitive-primary);
+}
+
+/* ── Карточка документа (узел 4428:76370) ────────────────────────────── */
+
+.ukd-detail__badge {
+  display: flex;
+  padding-top: var(--spacing-1x);
+}
+
+.ukd-detail__cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--content-element-list-spacing);
+}
+
+.ukd-detail__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* У PageAction в ките padding: 0, поэтому между действиями оставался мёртвый
+   зазор. Переносим его внутрь кнопки — шаг тот же, кликается вся полоса */
+.ukd-detail__actions .page-action {
+  padding: var(--spacing-3x) 0;
+}
+
+/* Карточка-навигатор: в ките Widget тянет за собой свой заголовок и минимальную
+   высоту, а в макете это просто белая карточка с подписью и одной строкой */
+.ukd-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3x);
+  padding: var(--spacing-4x) var(--spacing-5x);
+  border-radius: var(--card-rounding);
+  background: var(--container-default);
+  box-shadow: var(--Card);
+}
+
+.ukd-card__title {
+  margin: 0;
+}
+
+.ukd-card__doc-icon {
+  color: var(--primitive-error);
+}
+
+/* Tag красится через свои же переменные, а не форком компонента */
+.tag.ukd-tag--success {
+  --tag-surface-color: var(--bg-success-1);
+  --tag-text-color: var(--primitive-success);
+}
+
+.tag.ukd-tag--neutral {
+  --tag-surface-color: var(--bg-neutral-2);
+  --tag-text-color: var(--primitive-secondary);
+}
+
+.tag.ukd-tag--error {
+  --tag-surface-color: var(--bg-error-1);
+  --tag-text-color: var(--primitive-error);
+}
+
+/* В ките у Footer с одной кнопкой всегда variant="primary" и пропа для смены нет.
+   Переопределяем переменные Button значениями secondary */
+.ukd-footer--neutral .footer__button.button--primary {
+  --button-bg: var(--container-transparent-1);
+  --button-color: var(--primitive-primary);
+  --button-bg-hovered: var(--state-container-transparent-1-active);
+  --button-spinner-color: var(--primitive-brand);
+}
+
+/* ── Адаптив ──────────────────────────────────────────────────────────
+   Брейкпоинты: 1023 (PageLayout берёт паддинги на себя),
+   1279 (таблица → карточки), 479 (поля в дровере в одну колонку) */
+
+/* Ниже ширины макета фиксированным колонкам приходится уступить место
+   «Документу» и «Контрагенту», иначе их названия обрезаются */
+@media (max-width: 1439px) {
+  .ukd-table {
+    --ukd-table-columns: 48px minmax(0, 1.3fr) minmax(0, 1fr) 100px 120px 56px 48px;
+  }
+}
+
+@media (max-width: 1023px) {
+  /* Ниже 1024px PageLayout сам добавляет горизонтальный паддинг —
+     свой убираем, иначе отступ удваивается (в макете он 20px) */
+  .ukd-list {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 799px) {
+  /* Поиск отдельной строкой, чипы под ним (узел 4450:88963) */
+  .ukd-list__toolbar {
+    flex-wrap: wrap;
+  }
+
+  .ukd-list__toolbar-tail {
+    margin-left: auto;
+  }
+
+}
+
+/* Дровер в ките шириной 480 с max-width: 100vw, поэтому поля в нём стоит
+   складывать в одну колонку только когда он сам сужается (узел 4603:170440) */
+@media (max-width: 479px) {
+  .drawer .ukd-field-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.ukd-list__select-all {
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--primitive-brand);
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Карточная раскладка списка — узел 4450:88963 */
+
+.ukd-card-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-2-5x);
+  padding: var(--spacing-3x) var(--spacing-5x);
+}
+
+.ukd-card-row__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-0-5x);
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.ukd-card-row__title,
+.ukd-card-row__meta {
+  margin: 0;
+}
+
+.ukd-card-row__meta {
+  color: var(--primitive-secondary);
+}
+
+.ukd-card-row__bottom {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--spacing-2-5x);
+  padding-top: var(--spacing-2x);
+}
+
+/* Сумма не переносится: длинный статус жмётся, а не ломает строку */
+.ukd-card-row__bottom > :last-child {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.ukd-card-row__menu {
+  flex: 0 0 auto;
+}
+
+/* DropdownPopup обнуляет вертикальные паддинги у Cell, и двухстрочные строки
+   справочника сжимаются — возвращаем воздух */
+.dropdown-popup .ds-cell {
+  padding-top: var(--spacing-2x);
+  padding-bottom: var(--spacing-2x);
+}
+
+/* Логотип статуса документа — узел 4774:67858. В PNG подложка уже зашита,
+   скругление 8px добавляем сами */
+.ukd-doc-logo {
+  display: block;
+  flex: 0 0 auto;
+  border-radius: var(--rounding-2x);
+}
+
+/* Календарь на узких экранах не должен выходить за пределы экрана */
+@media (max-width: 479px) {
+  .ukd-calendar {
+    min-width: 0;
+  }
+}
+
+/* ── Дровер «Выбор позиций» — узел 4788:107929 ────────────────────────
+   Строки идут одной карточкой без зазоров, кликается вся полоса */
+
+.ukd-picker-list {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--form-rounding);
+  background: var(--bg-neutral-1);
+}
+
+.ukd-picker-list__row {
+  cursor: pointer;
+  padding: 0 var(--spacing-5x);
+}
+
+/* Разделители между строками, как в макете */
+.ukd-picker-list__row + .ukd-picker-list__row .ds-cell {
+  border-top: 1px solid var(--bg-neutral-2);
+}
+
+/* ── Инлайн-секции корректировки — узел 4827:88387 ────────────────────
+   Заголовок с подписью «Было: …» и корзиной, под ним поля через 16px */
+
+.ukd-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--content-element-list-spacing);
+}
+
+.ukd-section__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-4x);
+}
+
+.ukd-section__titles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1x);
+  min-width: 0;
+}
+
+.ukd-section__title,
+.ukd-section__prev {
+  margin: 0;
+}
+
+.ukd-section__prev {
+  color: var(--primitive-secondary);
+}
+
+/* Корзина у заголовка — в ките icon-only кнопки нет, класс из списка */
+.ukd-section__delete {
+  flex: 0 0 auto;
+  color: var(--primitive-neutral-4);
+}
+
+/* Пер-полевая подпись «Было: 300» под полем позиции — узел 4827:109373 */
+.ukd-prev {
+  margin: 0;
+  color: var(--primitive-secondary);
+}
+
+/* ── Позиция на шаге «Корректировка позиций» — узел 4827:109373 ───────── */
+
+.ukd-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--content-element-list-spacing);
+}
+
+/* Количество · Ед. измерения · Цена · НДС — четыре поля в ряд */
+.ukd-field-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--spacing-2x);
+}
+
+/* Поле и подпись «Было: …» под ним — одна ячейка сетки */
+.ukd-field-cell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1x);
+  min-width: 0;
+}
+
+.ukd-item__total {
+  margin: 0;
+  color: var(--primitive-secondary);
+}
+
+/* ── Панель итогов — узел 4867:92597 ─────────────────────────────────── */
+
+.ukd-totals {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2x);
+  padding: var(--spacing-5x);
+  border-radius: var(--card-rounding);
+  background: var(--bg-neutral-1);
+}
+
+.ukd-totals__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--spacing-4x);
+}
+
+.ukd-totals__label {
+  color: var(--primitive-secondary);
+}
+
+/* Итог отделён от строк и набран крупнее */
+.ukd-totals__row--total {
+  margin-top: var(--spacing-2x);
+  padding-top: var(--spacing-4x);
+  border-top: 1px solid var(--bg-neutral-2);
+}
+
+/* Ниже 1024 кит растягивает rightPanel на всю ширину — панель встаёт
+   карточкой над футером */
+@media (max-width: 1023px) {
+  .ukd-totals {
+    margin-top: var(--content-group-list-spacing);
+  }
+}
+
+/* Четыре поля в ряд не помещаются на узких экранах (узел 4867:52558) */
+@media (max-width: 1023px) {
+  .ukd-field-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 479px) {
+  .ukd-field-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ── «Проверка данных» — узел 4888:136205 ─────────────────────────────
+   Пары «подпись сверху, значение снизу» и строки позиций с суммой справа */
+
+.ukd-review {
+  display: flex;
+  flex-direction: column;
+  gap: var(--content-element-list-spacing);
+}
+
+.ukd-review__pair,
+.ukd-review__item-head,
+.ukd-review__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-0-5x);
+  min-width: 0;
+}
+
+.ukd-review__label {
+  color: var(--primitive-secondary);
+}
+
+/* Позиция: шапка с GTIN и названием, под ней четыре поля (узел 4945:151397) */
+.ukd-review__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--content-element-list-spacing);
+}
+
+.ukd-review__fields {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--spacing-3x);
+}
+
+/* Прежнее значение изменённого поля */
+.ukd-review__was {
+  color: var(--primitive-secondary);
+}
+
+/* Позиции перечисляются с отступом побольше, чем поля внутри одной */
+.ukd-review--items {
+  gap: var(--content-group-list-spacing);
+}
+
+@media (max-width: 1023px) {
+  .ukd-review__fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 479px) {
+  .ukd-review__fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ── Пустое состояние — узел 4888:138152 ─────────────────────────────── */
+
+.ukd-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--content-group-list-spacing);
+  padding: var(--spacing-16x) 0;
+  text-align: center;
+}
+
+.ukd-empty__art {
+  display: block;
+}
+
+.ukd-empty__text {
+  margin: 0;
+  color: var(--primitive-primary);
+}
+
+/* Ссылка-действие: в ките кнопки-ссылки такого вида нет */
+.ukd-empty__action {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--primitive-brand);
+  font-family: var(--font-family-tt-norms-tochka-extended);
+  cursor: pointer;
+}
+
+.ukd-empty__action:hover {
+  opacity: 0.72;
+}
