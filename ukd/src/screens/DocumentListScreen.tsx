@@ -1,35 +1,31 @@
 import { Fragment, useMemo, useState } from 'react'
 import {
   Checkbox,
-  Chip,
   ContextMenu,
   HeaderButton,
   NavigationBar,
   PageLayout,
   Table,
   TableCell,
+  TabsCarousel,
 } from '@ds'
 import {
   ArrowUpUnderline,
-  CoinsPlane,
   DocumentListAcsPlus,
   DotsThreeHorizontal,
-  Filters,
   Gear,
   PlusCircle,
   RequisitesT,
   Trash,
-  Truck,
 } from '@ds/icons'
 import { DocStatusText } from '../components/DocStatusText'
-import { SearchBar } from '../components/SearchBar'
 import { EmptyState } from '../components/ui/EmptyState'
 import { useMediaQuery } from '../hooks/useMediaQuery'
 import { CONTRACTORS } from '../data'
 import type { ListDocument } from '../types'
 
-const FILTERS = ['Все', 'Входящие', 'Исходящие', 'На подпись'] as const
-type Filter = (typeof FILTERS)[number]
+/** Разделы ЭДО. Кроме первого ничего не собрано — узел 1195:34189 */
+const SECTIONS = ['Документооборот', 'Перевозки', 'Чеки']
 
 /** Раскладка колонок задана в CSS — там же живут адаптивные варианты */
 const TABLE_COLUMNS = 'var(--ukd-table-columns)'
@@ -43,7 +39,7 @@ interface DocumentListScreenProps {
   onNotImplemented: () => void
 }
 
-/** Точка входа: список «Документооборот» — узел 4450:88803 */
+/** Точка входа: раздел «Документооборот» — узел 1195:34185 */
 export function DocumentListScreen({
   documents,
   onCreate,
@@ -57,8 +53,6 @@ export function DocumentListScreen({
    * места не остаётся, и они начинают обрезаться все сразу.
    */
   const isCompact = useMediaQuery('(max-width: 1279px)')
-  const [filter, setFilter] = useState<Filter>('Все')
-  const [query, setQuery] = useState('')
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   /** ContextMenu в ките управляемый — держим id открытой строки */
   const [openMenuId, setOpenMenuId] = useState<string | null>(null)
@@ -68,23 +62,9 @@ export function DocumentListScreen({
     [],
   )
 
-  const visible = useMemo(() => {
-    const needle = query.trim().toLowerCase()
-    return documents.filter((doc) => {
-      if (filter === 'Входящие' && doc.direction !== 'incoming') return false
-      if (filter === 'Исходящие' && doc.direction !== 'outgoing') return false
-      if (filter === 'На подпись' && doc.status !== 'awaiting_client') return false
-      if (!needle) return true
-      const contractor = contractorById[doc.contractorId]
-      const haystack = `${doc.title} ${doc.date} ${doc.amount} ${contractor?.listName ?? ''}`
-      return haystack.toLowerCase().includes(needle)
-    })
-  }, [documents, filter, query, contractorById])
+  const allSelected = documents.length > 0 && documents.every((d) => selectedIds.includes(d.id))
 
-  const allSelected = visible.length > 0 && visible.every((d) => selectedIds.includes(d.id))
-
-  const toggleAll = () =>
-    setSelectedIds(allSelected ? [] : visible.map((d) => d.id))
+  const toggleAll = () => setSelectedIds(allSelected ? [] : documents.map((d) => d.id))
 
   const toggleOne = (id: string) =>
     setSelectedIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]))
@@ -130,12 +110,13 @@ export function DocumentListScreen({
       size="l"
       topOffset={74}
       navigationBar={
+        /* Заголовок раздела переехал в контент табами, поэтому у боковой
+           навигации остаются только кнопка «Назад» и ссылки (узел 1195:34373) */
         <NavigationBar
-          className="ukd-nav"
+          className="ukd-nav ukd-list-nav"
           hasDescription={false}
           hasRootLink={false}
           hasActionButton={false}
-          title="Документооборот"
           backButtonLabel="Назад"
           items={[
             { kind: 'link', label: 'Создать платёж', onClick: onNotImplemented },
@@ -146,86 +127,46 @@ export function DocumentListScreen({
       }
     >
       <div className="ukd-list">
-        <div className="ukd-list__actions">
-          <div className="ukd-list__actions-group">
-            <HeaderButton variant="primary" icon={<PlusCircle />} onClick={onCreate}>
-              Создать
-            </HeaderButton>
-            <HeaderButton variant="secondary" icon={<ArrowUpUnderline />} onClick={onNotImplemented}>
-              Загрузить
-            </HeaderButton>
-            {/* В макете это тот же Header Button, но без подписи */}
-            <span className="ukd-list__icon-action">
-              <HeaderButton variant="secondary" icon={<Gear />} onClick={onNotImplemented}>
-                <span className="visually-hidden">Настройки таблицы</span>
-              </HeaderButton>
-            </span>
-          </div>
+        {/* Табы разделов и «Тарифы» в одной строке — узел 1195:34188.
+            Своя кнопка действия у TabsCarousel без подложки, а в макете
+            это обычный HeaderButton, поэтому ставим его рядом */}
+        <div className="ukd-list__navbar">
+          <TabsCarousel
+            className="ukd-list__tabs"
+            size="2xl"
+            selectedIndex={0}
+            tabs={SECTIONS.map((label) => ({ label }))}
+            onTabChange={(index) => index !== 0 && onNotImplemented()}
+          />
           <HeaderButton variant="secondary" icon={<RequisitesT />} onClick={onNotImplemented}>
             Тарифы
           </HeaderButton>
         </div>
 
-        <div className="ukd-list__search">
-          <SearchBar
-            value={query}
-            placeholder="Документ, дата, сумма или контрагент"
-            onChange={setQuery}
-          />
+        <div className="ukd-list__actions-group">
+          <HeaderButton variant="primary" icon={<PlusCircle />} onClick={onCreate}>
+            Создать
+          </HeaderButton>
+          <HeaderButton variant="secondary" icon={<ArrowUpUnderline />} onClick={onNotImplemented}>
+            Загрузить
+          </HeaderButton>
+          {/* В макете это тот же Header Button, но без подписи */}
+          <span className="ukd-list__icon-action">
+            <HeaderButton variant="secondary" icon={<Gear />} onClick={onNotImplemented}>
+              <span className="visually-hidden">Настройки таблицы</span>
+            </HeaderButton>
+          </span>
         </div>
 
-        {isCompact && (
-          <button type="button" className="ts-500-m ukd-list__select-all" onClick={toggleAll}>
-            {allSelected ? 'Снять всё' : 'Выбрать'}
-          </button>
-        )}
-
-        <div className="ukd-list__toolbar">
-          <button
-            type="button"
-            className="icon-button icon-button--32"
-            aria-label="Фильтры"
-            onClick={onNotImplemented}
-          >
-            {/* В макете глиф фильтров вписан в 16px, а не в 24px */}
-            <span className="ds-icon ds-icon--xs" aria-hidden="true">
-              <Filters />
-            </span>
-          </button>
-          {FILTERS.map((f) => (
-            <Chip key={f} variant="tab" isSelected={filter === f} onClick={() => setFilter(f)}>
-              {f}
-            </Chip>
-          ))}
-          <div className="ukd-list__toolbar-tail">
-            <Chip
-              variant="chip"
-              leftAccessory="icon"
-              leftIcon={<CoinsPlane />}
-              onClick={onNotImplemented}
-            >
-              Авансовые отчёты
-            </Chip>
-            <Chip
-              variant="chip"
-              leftAccessory="icon"
-              leftIcon={<Truck />}
-              onClick={onNotImplemented}
-            >
-              Транспортный ЭДО
-            </Chip>
-          </div>
-        </div>
-
-        {visible.length === 0 ? (
-          /* Список без документов — узел 1093:32162 */
+        {documents.length === 0 ? (
+          /* Раздел без документов — узел 1320:46761 */
           <div className="ukd-list__empty">
             <EmptyState text="Здесь будут документы. Пока их нет." />
           </div>
         ) : isCompact ? (
           /* Узел 4450:88963: таблица становится списком карточек */
           <Table className="ukd-cards" gridTemplateColumns="minmax(0, 1fr)">
-            {visible.map((doc) => {
+            {documents.map((doc) => {
               const contractor = contractorById[doc.contractorId]
 
               return (
@@ -245,69 +186,69 @@ export function DocumentListScreen({
             })}
           </Table>
         ) : (
-        <Table className="ukd-table" gridTemplateColumns={TABLE_COLUMNS}>
-          <TableCell
-            className="ukd-cell--center ukd-cell--action"
-            hasTitle={false}
-            hasLeftAccessory
-            leftAccessory={
-              <Checkbox
-                isChecked={allSelected}
-                isIndeterminate={!allSelected && visible.some((d) => selectedIds.includes(d.id))}
-                onChange={toggleAll}
-                label="Выбрать все документы"
-              />
-            }
-          />
-          <TableCell title="Документ" titleStyle="500" />
-          <TableCell title="Контрагент" titleStyle="500" />
-          <TableCell className="ukd-cell--center-text" title="Дата" titleStyle="500" />
-          <TableCell className="ukd-cell--right" title="Сумма" titleStyle="500" />
-          <TableCell className="ukd-cell--center-text" title="в 1С" titleStyle="500" />
-          <TableCell hasTitle={false} />
+          <Table className="ukd-table" gridTemplateColumns={TABLE_COLUMNS}>
+            <TableCell
+              className="ukd-cell--center ukd-cell--action"
+              hasTitle={false}
+              hasLeftAccessory
+              leftAccessory={
+                <Checkbox
+                  isChecked={allSelected}
+                  isIndeterminate={!allSelected && documents.some((d) => selectedIds.includes(d.id))}
+                  onChange={toggleAll}
+                  label="Выбрать все документы"
+                />
+              }
+            />
+            <TableCell title="Документ" titleStyle="500" />
+            <TableCell title="Контрагент" titleStyle="500" />
+            <TableCell className="ukd-cell--center-text" title="Дата" titleStyle="500" />
+            <TableCell className="ukd-cell--right" title="Сумма" titleStyle="500" />
+            <TableCell className="ukd-cell--center-text" title="в 1С" titleStyle="500" />
+            <TableCell hasTitle={false} />
 
-          {visible.map((doc) => {
-            const contractor = contractorById[doc.contractorId]
+            {documents.map((doc) => {
+              const contractor = contractorById[doc.contractorId]
 
-            return (
-              <Fragment key={doc.id}>
-                <TableCell
-                  className="ukd-cell--center ukd-cell--action"
-                  hasTitle={false}
-                  hasLeftAccessory
-                  leftAccessory={
-                    <Checkbox
-                      isChecked={selectedIds.includes(doc.id)}
-                      onChange={() => toggleOne(doc.id)}
-                      label={`Выбрать ${doc.title}`}
-                    />
-                  }
-                />
-                <TableCell
-                  title={doc.title}
-                  hasDescription
-                  description={<DocStatusText status={doc.status} />}
-                  onClick={() => onOpenDocument(doc.id)}
-                />
-                <TableCell
-                  title={contractor?.listName ?? '—'}
-                  hasDescription
-                  description={`ИНН: ${contractor?.inn ?? '—'}`}
-                  onClick={() => onOpenDocument(doc.id)}
-                />
-                <TableCell className="ukd-cell--center-text" title={doc.date} />
-                <TableCell className="ukd-cell--right" title={doc.amount} />
-                <TableCell className="ukd-cell--center-text" hasTitle={false} />
-                <TableCell
-                  className="ukd-cell--center ukd-cell--action"
-                  hasTitle={false}
-                  hasRightAccessory
-                  rightAccessory={renderRowMenu(doc)}
-                />
-              </Fragment>
-            )
-          })}
-        </Table>
+              return (
+                <Fragment key={doc.id}>
+                  <TableCell
+                    className="ukd-cell--center ukd-cell--action"
+                    hasTitle={false}
+                    hasLeftAccessory
+                    leftAccessory={
+                      <Checkbox
+                        isChecked={selectedIds.includes(doc.id)}
+                        onChange={() => toggleOne(doc.id)}
+                        label={`Выбрать ${doc.title}`}
+                      />
+                    }
+                  />
+                  <TableCell
+                    title={doc.title}
+                    hasDescription
+                    description={<DocStatusText status={doc.status} />}
+                    onClick={() => onOpenDocument(doc.id)}
+                  />
+                  <TableCell
+                    title={contractor?.listName ?? '—'}
+                    hasDescription
+                    description={`ИНН: ${contractor?.inn ?? '—'}`}
+                    onClick={() => onOpenDocument(doc.id)}
+                  />
+                  <TableCell className="ukd-cell--center-text" title={doc.date} />
+                  <TableCell className="ukd-cell--right" title={doc.amount} />
+                  <TableCell className="ukd-cell--center-text" hasTitle={false} />
+                  <TableCell
+                    className="ukd-cell--center ukd-cell--action"
+                    hasTitle={false}
+                    hasRightAccessory
+                    rightAccessory={renderRowMenu(doc)}
+                  />
+                </Fragment>
+              )
+            })}
+          </Table>
         )}
       </div>
     </PageLayout>

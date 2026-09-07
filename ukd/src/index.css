@@ -320,20 +320,34 @@ body {
   gap: var(--spacing-6x);
 }
 
-/* ── Экран списка «Документооборот» (узел 4450:88803) ────────────────── */
+/* ── Экран списка «Документооборот» (узел 1195:34185) ────────────────── */
 
 .ukd-list {
   display: flex;
   flex-direction: column;
-  gap: var(--content-element-list-spacing);
+  gap: var(--content-group-list-spacing);
   padding: 0 var(--page-horizontal-padding);
 }
 
-.ukd-list__actions {
+/* Строка табов раздела и «Тарифы» — узел 1195:34188 */
+.ukd-list__navbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--spacing-5x);
+  min-height: 40px;
+}
+
+.ukd-list__tabs {
+  min-width: 0;
+}
+
+/* Заголовок раздела теперь в контенте, у боковой навигации его нет
+   (узел 1195:34373) — китового пропа для этого не предусмотрено.
+   Прячем всю шапку, а не только заголовок: пустой блок оставлял в колонке
+   лишний зазор 40px */
+.ukd-list-nav .navigation-bar__header {
+  display: none;
 }
 
 .ukd-list__actions-group {
@@ -347,58 +361,6 @@ body {
   gap: 0;
 }
 
-/* В макете поиск во всю ширину и выше стандартного (узел 4450:88803) */
-.ukd-list__search .search-bar {
-  height: 44px;
-  padding: 0 var(--spacing-5x);
-  border-radius: var(--rounding-3x);
-}
-
-.ukd-list__toolbar {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-2-5x);
-}
-
-.ukd-list__toolbar-tail {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-2-5x);
-  margin-left: auto;
-}
-
-/* Search bar (в UI-ките нет отдельного компонента) */
-
-.search-bar {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-2-5x);
-  height: 32px;
-  padding: 0 var(--spacing-2-5x);
-  border-radius: var(--rounding-2-5x);
-  background: var(--container-transparent-1);
-}
-
-.search-bar__icon {
-  color: var(--primitive-neutral-4);
-  flex-shrink: 0;
-}
-
-.search-bar__field {
-  flex: 1 1 auto;
-  min-width: 0;
-  padding: 0;
-  border: 0;
-  outline: 0;
-  background: transparent;
-  font-family: inherit;
-  color: var(--primitive-primary);
-}
-
-.search-bar__field::placeholder {
-  color: var(--primitive-neutral-4);
-  opacity: 1;
-}
 
 /* Icon-only кнопки (в UI-ките такого компонента нет) */
 
@@ -571,17 +533,6 @@ body {
   }
 }
 
-@media (max-width: 799px) {
-  /* Поиск отдельной строкой, чипы под ним (узел 4450:88963) */
-  .ukd-list__toolbar {
-    flex-wrap: wrap;
-  }
-
-  .ukd-list__toolbar-tail {
-    margin-left: auto;
-  }
-
-}
 
 /* Дровер в ките шириной 480 с max-width: 100vw, поэтому поля в нём стоит
    складывать в одну колонку только когда он сам сужается (узел 4603:170440) */
@@ -591,15 +542,6 @@ body {
   }
 }
 
-.ukd-list__select-all {
-  align-self: flex-start;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--primitive-brand);
-  font-family: inherit;
-  cursor: pointer;
-}
 
 /* Карточная раскладка списка — узел 4450:88963 */
 
