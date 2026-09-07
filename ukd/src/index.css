@@ -111,6 +111,16 @@ body {
   flex-direction: column;
 }
 
+/* В макете 4788:89302 строки стека по 72px, у кита вертикальный отступ
+   на 2px меньше — 14px против 16px */
+.ukd-checklist .form-cell {
+  --form-cell-padding-y: var(--spacing-4x);
+}
+
+.ukd-checklist .action-form-cell {
+  --action-form-cell-padding-y: var(--spacing-4x);
+}
+
 .ukd-checklist__row {
   cursor: pointer;
 }

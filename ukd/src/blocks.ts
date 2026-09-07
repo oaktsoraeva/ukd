@@ -145,15 +145,17 @@ const SIGNER_FIELD: FieldSchema = {
 }
 
 /* ───── Реестр блоков корректировки ──────────────────────────────────
-   Ровно три блока — узел 4827:88387. Порядок совпадает с макетом */
+   Ровно два блока — узел 4827:88387. Порядок совпадает с макетом */
 
 export const CORRECTION_BLOCKS: CorrectionBlock[] = [
   {
+    // Только для основания-счёта-фактуры: сам УПД и есть документ об
+    // отгрузке, корректировать его отдельным пунктом внутри УКД нечего
     id: 'shipment',
     title: 'Документ об отгрузке',
     body: 'schema',
     fields: [DOC_NAME_FIELD, NUM_FIELD, DATE_FIELD],
-    onlyForKind: 'upd',
+    onlyForKind: 'invoice',
     summarize: documentSummary,
   },
   {

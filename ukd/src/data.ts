@@ -271,7 +271,6 @@ export const SOURCE_DOCS: SourceDoc[] = [
     title: 'УПД №1 от 01.01.2027',
     contractorId: 'stroyinvest',
     prefill: {
-      shipment: { name: 'Универсальный передаточный документ', num: '1', date: '01.01.2027' },
       consignee: contractorValues('stroyinvest'),
     },
     items: UPD_ITEMS,
@@ -283,7 +282,6 @@ export const SOURCE_DOCS: SourceDoc[] = [
     title: 'УПД №2 от 15.01.2027',
     contractorId: 'iskra',
     prefill: {
-      shipment: { name: 'Универсальный передаточный документ', num: '2', date: '15.01.2027' },
       consignee: contractorValues('iskra'),
     },
     items: [ITEM_SERVICE],
@@ -295,6 +293,7 @@ export const SOURCE_DOCS: SourceDoc[] = [
     title: 'Счёт-фактура №1 от 01.01.2027',
     contractorId: 'mehanika',
     prefill: {
+      shipment: { name: 'Товарная накладная', num: '1', date: '01.01.2027' },
       consignee: contractorValues('mehanika'),
     },
     items: UPD_ITEMS,
@@ -306,6 +305,7 @@ export const SOURCE_DOCS: SourceDoc[] = [
     title: 'Счёт-фактура №2 от 01.01.2027',
     contractorId: 'smolin',
     prefill: {
+      shipment: { name: 'Товарная накладная', num: '2', date: '01.01.2027' },
       consignee: contractorValues('smolin'),
     },
     items: [ITEM_SERVICE],
@@ -317,6 +317,7 @@ export const SOURCE_DOCS: SourceDoc[] = [
     title: 'Счёт-фактура №3 от 01.01.2027',
     contractorId: 'iskra',
     prefill: {
+      shipment: { name: 'Товарная накладная', num: '3', date: '01.01.2027' },
       consignee: contractorValues('iskra'),
     },
     items: UPD_ITEMS.slice(0, 3),

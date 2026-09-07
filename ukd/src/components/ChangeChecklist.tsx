@@ -33,8 +33,15 @@ export function ChangeChecklist({
   onOpenPicker,
   error,
 }: ChangeChecklistProps) {
-  const stackVariant = (index: number, total: number) =>
-    index === 0 ? 'stack-top' : index === total - 1 ? 'stack-bottom' : 'stack-middle'
+  /**
+   * Все строки блока — один стек без зазоров: в макете 4788:89302 это одна
+   * серая карточка на четыре строки с волосяными разделителями, а не два
+   * отдельных стека. Пункты блоков идут первыми, за ними тоггл позиций и
+   * переход к их выбору
+   */
+  const rowCount = blocks.length + 2
+  const stackVariant = (index: number) =>
+    index === 0 ? 'stack-top' : index === rowCount - 1 ? 'stack-bottom' : 'stack-middle'
 
   return (
     <div className="ukd-group">
@@ -57,30 +64,24 @@ export function ChangeChecklist({
             <FormCell
               title={block.title}
               description={block.summarize(sourceValues[block.id])}
-              variant={stackVariant(index, blocks.length)}
+              variant={stackVariant(index)}
               right={<Checkbox isChecked={selectedBlocks[block.id]} label={block.title} />}
             />
           </div>
         ))}
-      </div>
 
-      <div className="ukd-checklist">
         <FormCell
           title="Изменились позиции"
           description="Корректировка товаров и услуг"
-          variant="stack-top"
+          variant={stackVariant(blocks.length)}
           right={
-            <Switch
-              isSelected={itemsOn}
-              onChange={onToggleItems}
-              label="Изменились позиции"
-            />
+            <Switch isSelected={itemsOn} onChange={onToggleItems} label="Изменились позиции" />
           }
         />
         <ActionFormCell
           title="К выбору позиций"
           description={`Выбрано ${selectedItemCount} из ${sourceItemCount}`}
-          variant="stack-bottom"
+          variant={stackVariant(blocks.length + 1)}
           onClick={onOpenPicker}
         />
       </div>
