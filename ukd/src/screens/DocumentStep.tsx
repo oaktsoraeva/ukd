@@ -3,6 +3,7 @@ import { DocumentPicker } from '../components/DocumentPicker'
 import { ChangeChecklist } from '../components/ChangeChecklist'
 import { DateField } from '../components/ui/DateField'
 import { FieldRow } from '../components/ui/FieldRow'
+import { ukdDateError } from '../lib/validate'
 import type { BlockValues, CorrectionBlock, CorrectionBlockId } from '../types'
 
 interface DocumentStepProps {
@@ -47,6 +48,9 @@ export function DocumentStep({
   attempted,
 }: DocumentStepProps) {
   const hasSource = sourceDocId !== null
+  /* Номер и дата обязательны — узел 4788:110740 */
+  const numberError = attempted && ukdNumber.trim() === '' ? 'Укажите номер' : undefined
+  const dateError = attempted ? ukdDateError(ukdDate) : undefined
   // Скрытый блок не должен держать шаг: считаем только применимые
   const nothingPicked =
     !blocks.some((b) => selectedBlocks[b.id]) && !(itemsOn && selectedItemCount > 0)
@@ -70,8 +74,22 @@ export function DocumentStep({
           <h2 className="ts-600-xl ukd-group__title">УКД</h2>
         </div>
         <FieldRow>
-          <Input label="Номер" placeholder="№" value={ukdNumber} onChange={onUkdNumberChange} />
-          <DateField label="Дата" value={ukdDate} anchor={ukdDate} onChange={onUkdDateChange} />
+          <Input
+            label="Номер"
+            placeholder="№"
+            value={ukdNumber}
+            isError={Boolean(numberError)}
+            errorMessage={numberError}
+            onChange={onUkdNumberChange}
+          />
+          <DateField
+            label="Дата"
+            value={ukdDate}
+            anchor={ukdDate}
+            isError={Boolean(dateError)}
+            errorMessage={dateError}
+            onChange={onUkdDateChange}
+          />
         </FieldRow>
       </div>
 

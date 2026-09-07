@@ -719,43 +719,55 @@ body {
   color: var(--primitive-secondary);
 }
 
-/* Корзина у заголовка — в ките icon-only кнопки нет, класс из списка */
+/* Корзина у заголовка: в макете 4827:88387 подложки под глифом нет */
 .ukd-section__delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex: 0 0 auto;
+  padding: 0;
+  border: 0;
+  background: none;
   color: var(--primitive-neutral-4);
+  cursor: pointer;
+  transition: color 0.15s ease;
 }
 
-/* Пер-полевая подпись «Было: 300» под полем позиции — узел 4827:109373 */
-.ukd-prev {
-  margin: 0;
-  color: var(--primitive-secondary);
+.ukd-section__delete:hover {
+  color: var(--primitive-primary);
 }
 
 /* ── Позиция на шаге «Корректировка позиций» — узел 4827:109373 ───────── */
 
+/* Список позиций: между блоками 24px (узел 4840:36815) */
+.ukd-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6x);
+}
+
+/* Плашки позиции стоят с зазором 2px и читаются как одна карточка */
 .ukd-item {
   display: flex;
   flex-direction: column;
-  gap: var(--content-element-list-spacing);
+  gap: var(--spacing-0-5x);
 }
 
 /* Количество · Ед. измерения · Цена · НДС — четыре поля в ряд */
 .ukd-field-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--spacing-2x);
+  gap: var(--spacing-0-5x);
 }
 
-/* Поле и подпись «Было: …» под ним — одна ячейка сетки */
-.ukd-field-cell {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-1x);
-  min-width: 0;
-}
-
-.ukd-item__total {
+/* Строки GTIN и «Итого»: в макете это такие же плашки, как поля, но с одной
+   строкой текста вместо подписи и ввода. Геометрия повторяет Input:
+   12px + 20px + 12px = 44px */
+.ukd-item__row {
   margin: 0;
+  padding: var(--spacing-3x) var(--spacing-5x);
+  border-radius: var(--rounding-3x);
+  background: var(--container-transparent-1);
   color: var(--primitive-secondary);
 }
 
@@ -898,4 +910,15 @@ body {
 
 .ukd-empty__action:hover {
   opacity: 0.72;
+}
+
+/* Пустой список: в узле 1093:32162 подпись серая, ссылки-действия нет,
+   а иллюстрация «Dog Digging» вписана в 170px */
+.ukd-list__empty .ukd-empty__text {
+  color: var(--primitive-secondary);
+}
+
+.ukd-list__empty .ukd-empty__art {
+  width: 170px;
+  height: auto;
 }

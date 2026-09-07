@@ -29,6 +29,15 @@ const KIND_TITLES: Record<string, string> = {
   'outgoing-invoice': 'Исходящий счёт-фактура',
   'incoming-upd': 'Входящий УПД',
   'incoming-invoice': 'Входящий счёт-фактура',
+  'outgoing-ukd': 'Исходящий УКД',
+  'incoming-ukd': 'Входящий УКД',
+}
+
+/** Подстановка в «Ссылка на …» */
+const KIND_LABELS: Record<string, string> = {
+  upd: 'УПД',
+  invoice: 'счёт-фактуру',
+  ukd: 'УКД',
 }
 
 interface DocumentDetailScreenProps {
@@ -47,8 +56,8 @@ export function DocumentDetailScreen({
 }: DocumentDetailScreenProps) {
   const contractor = CONTRACTORS.find((c) => c.id === document.contractorId)
   const kindTitle = KIND_TITLES[`${document.direction}-${document.kind}`] ?? 'Документ'
-  const shortTitle = document.title.replace(/^(УПД|Счёт-фактура)\s/, '')
-  const docLabel = document.kind === 'upd' ? 'УПД' : 'счёт-фактуру'
+  const shortTitle = document.title.replace(/^(УПД|УКД|Счёт-фактура)\s/, '')
+  const docLabel = KIND_LABELS[document.kind] ?? 'документ'
 
   const actions = [
     { label: 'Отправить в 1С', icon: <ArrowRightTopOutgoingSquare /> },
@@ -123,13 +132,18 @@ export function DocumentDetailScreen({
           </div>
 
           <div className="ukd-detail__actions">
-            {/* Главное действие сценария — с описанием, как в макете */}
-            <PageAction
-              title="Оформить УКД"
-              description={`УКД корректирует стоимость товаров, работ или услуг в ${docLabel === 'УПД' ? 'УПД' : 'счёте-фактуре'}`}
-              leftAccessory={<DocumentListAcsPlus />}
-              onClick={onCreateUkd}
-            />
+            {/* Главное действие сценария — с описанием, как в макете.
+                Сам УКД корректировать нечем, поэтому у него его нет */}
+            {document.kind !== 'ukd' && (
+              <PageAction
+                title="Оформить УКД"
+                description={`УКД корректирует стоимость товаров, работ или услуг в ${
+                  document.kind === 'upd' ? 'УПД' : 'счёте-фактуре'
+                }`}
+                leftAccessory={<DocumentListAcsPlus />}
+                onClick={onCreateUkd}
+              />
+            )}
             {actions.map((action) => (
               <PageAction
                 key={action.label}

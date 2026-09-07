@@ -28,16 +28,19 @@ export function ItemsStep({
         <h1 className="ts-600-4xl ukd-page__title">Корректировка позиций</h1>
       </div>
 
-      {items.map((item, index) => (
-        <ItemSection
-          key={item.id}
-          item={item}
-          index={index + 1}
-          errors={errors[item.id] ?? {}}
-          onChange={(patch) => onChange(item.id, patch)}
-          onDelete={() => onDelete(item.id)}
-        />
-      ))}
+      {/* Между позициями 24px, а не общий шаг страницы в 32px — узел 4840:36815 */}
+      <div className="ukd-items">
+        {items.map((item, index) => (
+          <ItemSection
+            key={item.id}
+            item={item}
+            index={index + 1}
+            errors={errors[item.id] ?? {}}
+            onChange={(patch) => onChange(item.id, patch)}
+            onDelete={() => onDelete(item.id)}
+          />
+        ))}
+      </div>
 
       <div className="ukd-actions-card">
         <ActionFormCell

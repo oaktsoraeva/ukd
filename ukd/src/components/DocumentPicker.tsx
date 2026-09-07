@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Cell, Dropdown } from '@ds'
 import { CONTRACTORS, DOC_STATUS, SOURCE_DOCS } from '../data'
 
@@ -13,21 +12,12 @@ interface DocumentPickerProps {
  * «Основание УКД» — обязательный выбор УПД или счёта-фактуры
  * (узлы 4774:67451 и 4788:110741). Подпись под полем постоянная и
  * при ошибке заменяется красной — это штатное поведение китового Dropdown.
+ *
+ * Поиска в справочнике нет: в макете 4774:67858 попап открывается сразу
+ * списком, документов-оснований всего пять.
  */
 export function DocumentPicker({ value, onChange, isError, errorMessage }: DocumentPickerProps) {
-  const [query, setQuery] = useState('')
-
   const selected = SOURCE_DOCS.find((d) => d.id === value)
-  const needle = query.trim().toLowerCase()
-
-  const matches = SOURCE_DOCS.filter((doc) => {
-    if (!needle) return true
-    const contractor = CONTRACTORS.find((c) => c.id === doc.contractorId)
-    return (
-      doc.title.toLowerCase().includes(needle) ||
-      (contractor?.listName ?? '').toLowerCase().includes(needle)
-    )
-  })
 
   return (
     <Dropdown
@@ -35,14 +25,10 @@ export function DocumentPicker({ value, onChange, isError, errorMessage }: Docum
       placeholder="Название документа или контрагента"
       description="Выберите УПД или счёт‑фактуру для корректировки"
       value={selected?.title}
-      hasSearch
-      searchPlaceholder="Поиск"
-      onSearchChange={setQuery}
-      isEmpty={matches.length === 0}
       isError={isError}
       errorMessage={errorMessage ?? 'Выберите УПД или счёт‑фактуру'}
     >
-      {matches.map((doc) => (
+      {SOURCE_DOCS.map((doc) => (
         <Cell
           key={doc.id}
           /* Статус стоит над названием — узел 4774:67858 */

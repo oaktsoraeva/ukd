@@ -1,6 +1,5 @@
 import { Cell, Dropdown, Input } from '@ds'
 import { CounterInput } from './ui/CounterInput'
-import { PrevValue } from './ui/PrevValue'
 import { SectionHeader } from './ui/SectionHeader'
 import { UNITS, VAT_RATES } from '../data'
 import { formatMoney, maskMoney, maskQuantity } from '../lib/format'
@@ -16,7 +15,14 @@ interface ItemSectionProps {
   onDelete: () => void
 }
 
-/** Одна позиция на шаге «Корректировка позиций» — узел 4827:109373 */
+/**
+ * Одна позиция на шаге «Корректировка позиций» — узел 4827:109373.
+ *
+ * Все строки позиции — плашки кита с зазором 2px, поэтому они читаются
+ * как одна карточка. Подпись «Было: …» отдаём в `description`: китовый
+ * Input рисует её внутри плашки под разделителем, ровно как в макете,
+ * и при ошибке сам подменяет её текстом ошибки.
+ */
 export function ItemSection({ item, index, errors, onChange, onDelete }: ItemSectionProps) {
   const prev = itemPrevLabels(item.origin)
   /* Позиции с кодами маркировки: название и количество КИЗ не редактируются
@@ -43,68 +49,67 @@ export function ItemSection({ item, index, errors, onChange, onDelete }: ItemSec
           onChange={(value) => onChange({ name: value })}
         />
 
-        {hasCodes && (
-          <Input label="GTIN" value={item.gtin} isDisabled onChange={() => undefined} />
-        )}
+        {/* GTIN в макете — не поле, а строка текста на такой же плашке */}
+        {hasCodes && <p className="ts-400-m ukd-item__row">GTIN: {item.gtin}</p>}
 
         <div className="ukd-field-grid">
-          <div className="ukd-field-cell">
-            <Input
-              label={hasCodes ? 'Количество КИЗ' : 'Количество'}
-              placeholder="0"
-              value={item.quantity}
-              isDisabled={hasCodes}
-              isError={Boolean(errors.quantity)}
-              errorMessage={errors.quantity}
-              onChange={(value) => onChange({ quantity: maskQuantity(value) })}
-            />
-            {prev && <PrevValue value={prev.quantity} />}
-          </div>
+          <Input
+            label={hasCodes ? 'Количество КИЗ' : 'Количество'}
+            placeholder="0"
+            value={item.quantity}
+            isDisabled={hasCodes}
+            description={prev ? `Было: ${prev.quantity}` : undefined}
+            isError={Boolean(errors.quantity)}
+            errorMessage={errors.quantity}
+            onChange={(value) => onChange({ quantity: maskQuantity(value) })}
+          />
 
-          <div className="ukd-field-cell">
-            {/* 45 значений в справочнике — без поиска пользоваться неудобно */}
-            <Dropdown label="Ед. измерения" value={unitLabel} hasSearch searchPlaceholder="Поиск">
-              {UNITS.map((unit) => (
-                <Cell
-                  key={unit.id}
-                  hasLeftAccessory={false}
-                  title={unit.label}
-                  onClick={() => onChange({ unitId: unit.id })}
-                />
-              ))}
-            </Dropdown>
-            {prev && <PrevValue value={prev.unit} />}
-          </div>
+          {/* 45 значений в справочнике — без поиска пользоваться неудобно */}
+          <Dropdown
+            label="Ед. измерения"
+            value={unitLabel}
+            description={prev ? `Было: ${prev.unit}` : undefined}
+            hasSearch
+            searchPlaceholder="Поиск"
+          >
+            {UNITS.map((unit) => (
+              <Cell
+                key={unit.id}
+                hasLeftAccessory={false}
+                title={unit.label}
+                onClick={() => onChange({ unitId: unit.id })}
+              />
+            ))}
+          </Dropdown>
 
-          <div className="ukd-field-cell">
-            <Input
-              label="Цена"
-              placeholder="0 ₽"
-              value={item.price}
-              isError={Boolean(errors.price)}
-              errorMessage={errors.price}
-              onChange={(value) => onChange({ price: maskMoney(value) })}
-            />
-            {prev && <PrevValue value={prev.price} />}
-          </div>
+          <Input
+            label="Цена"
+            placeholder="0 ₽"
+            value={item.price}
+            description={prev ? `Было: ${prev.price}` : undefined}
+            isError={Boolean(errors.price)}
+            errorMessage={errors.price}
+            onChange={(value) => onChange({ price: maskMoney(value) })}
+          />
 
-          <div className="ukd-field-cell">
-            <Dropdown label="НДС" value={vatLabel}>
-              {VAT_RATES.map((rate) => (
-                <Cell
-                  key={rate.id}
-                  hasLeftAccessory={false}
-                  title={rate.label}
-                  onClick={() => onChange({ vatId: rate.id })}
-                />
-              ))}
-            </Dropdown>
-            {prev && <PrevValue value={prev.vat} />}
-          </div>
+          <Dropdown
+            label="НДС"
+            value={vatLabel}
+            description={prev ? `Было: ${prev.vat}` : undefined}
+          >
+            {VAT_RATES.map((rate) => (
+              <Cell
+                key={rate.id}
+                hasLeftAccessory={false}
+                title={rate.label}
+                onClick={() => onChange({ vatId: rate.id })}
+              />
+            ))}
+          </Dropdown>
         </div>
 
-        {/* Построчный итог без НДС — узел 4827:109373 */}
-        <p className="ts-400-s ukd-item__total">Итого: {formatMoney(itemTotal(item))}</p>
+        {/* Построчный итог без НДС — тоже плашка, узел 4827:109373 */}
+        <p className="ts-400-m ukd-item__row">Итого: {formatMoney(itemTotal(item))}</p>
       </div>
     </section>
   )

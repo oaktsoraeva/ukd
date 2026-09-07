@@ -23,6 +23,7 @@ import {
 } from '@ds/icons'
 import { DocStatusText } from '../components/DocStatusText'
 import { SearchBar } from '../components/SearchBar'
+import { EmptyState } from '../components/ui/EmptyState'
 import { useMediaQuery } from '../hooks/useMediaQuery'
 import { CONTRACTORS } from '../data'
 import type { ListDocument } from '../types'
@@ -216,7 +217,12 @@ export function DocumentListScreen({
           </div>
         </div>
 
-        {isCompact ? (
+        {visible.length === 0 ? (
+          /* Список без документов — узел 1093:32162 */
+          <div className="ukd-list__empty">
+            <EmptyState text="Здесь будут документы. Пока их нет." />
+          </div>
+        ) : isCompact ? (
           /* Узел 4450:88963: таблица становится списком карточек */
           <Table className="ukd-cards" gridTemplateColumns="minmax(0, 1fr)">
             {visible.map((doc) => {

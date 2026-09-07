@@ -94,3 +94,10 @@ export function validateItem(values: ItemValues): Record<string, string> {
   }
   return errors
 }
+
+/** Дата УКД на шаге «Документ» — узел 4788:110740 */
+export function ukdDateError(value: string): string | undefined {
+  if (value.trim() === '') return 'Укажите дату'
+  if (!isValidDate(value)) return 'Укажите дату в формате дд.мм.гггг'
+  return undefined
+}

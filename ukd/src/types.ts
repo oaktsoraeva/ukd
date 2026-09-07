@@ -165,9 +165,12 @@ export type ListDocStatus =
 
 export type DocDirection = 'outgoing' | 'incoming'
 
+/** В списке, в отличие от справочника оснований, встречается и сам УКД */
+export type ListDocKind = SourceDocKind | 'ukd'
+
 export interface ListDocument {
   id: string
-  kind: SourceDocKind
+  kind: ListDocKind
   direction: DocDirection
   /** «УПД №1 от 01.01.2027» */
   title: string

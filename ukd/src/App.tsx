@@ -19,7 +19,6 @@ import {
   CONTRACTORS,
   CUSTOMER,
   FAILING_SOURCE_DOC_ID,
-  LIST_DOCUMENTS,
   NOT_IMPLEMENTED,
   REQUEST_ERROR,
   UNITS,
@@ -27,8 +26,9 @@ import {
   TODAY,
 } from './data'
 import { applySourceDoc, emptyPrefill, findSourceDoc, isDiff } from './lib/prefill'
-import { validateBlock, validateItem } from './lib/validate'
+import { ukdDateError, validateBlock, validateItem } from './lib/validate'
 import { itemsTotals } from './lib/items'
+import { formatMoney } from './lib/format'
 import { reviewBlockPairs, reviewItems } from './lib/review'
 import { nextStep, prevStep, visibleSteps } from './lib/steps'
 import type {
@@ -37,6 +37,7 @@ import type {
   CorrectionBlockId,
   ItemValues,
   LineItem,
+  ListDocument,
   StepId,
 } from './types'
 
@@ -62,6 +63,12 @@ const CONFIRM_COPY: Record<'items-reset' | 'block', ConfirmCopy> = {
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('list')
+  /**
+   * Список стартует пустым — точка входа прототипа это пустое состояние
+   * «Документооборота» (узел 1093:32162). Созданные УКД сюда добавляются,
+   * так что карточка документа доступна через них.
+   */
+  const [documents, setDocuments] = useState<ListDocument[]>([])
   const [detailDocId, setDetailDocId] = useState<string | null>(null)
   const [createDrawerOpen, setCreateDrawerOpen] = useState(false)
 
@@ -100,7 +107,7 @@ export default function App() {
   const [createFailed, setCreateFailed] = useState(false)
   const [pageAlert, setPageAlert] = useState<PageAlertState | null>(null)
 
-  const detailDocument = LIST_DOCUMENTS.find((d) => d.id === detailDocId) ?? null
+  const detailDocument = documents.find((d) => d.id === detailDocId) ?? null
   const sourceDoc = findSourceDoc(sourceDocId)
 
   /** Позиции документа-основания — универсум для «Выбрано N из M» */
@@ -336,8 +343,10 @@ export default function App() {
     const picked = pickerDraft ?? []
     setSelectedItemIds(picked)
     setPickerDraft(null)
-    // Применили пустой выбор — тоггл гаснет, шага позиций не будет
-    if (picked.length === 0) setItemsOn(false)
+    /* Выбор позиций и тоггл — одно и то же решение: применили непустой выбор,
+       значит позиции корректируются. Иначе «Выбрано 7 из 7» висело бы при
+       выключенном тоггле, а шага позиций не было */
+    setItemsOn(picked.length > 0)
   }
 
   /** Закрытие крестиком не коммитит черновик */
@@ -345,6 +354,21 @@ export default function App() {
     setPickerDraft(null)
     if (selectedItemIds.length === 0) setItemsOn(false)
   }
+
+  /** Строка списка для только что созданного УКД */
+  const createdDocument = (createdCount: number): ListDocument => ({
+    id: `ukd-${createdCount + 1}`,
+    kind: 'ukd',
+    direction: 'outgoing',
+    title: `УКД №${ukdNumber} от ${ukdDate}`,
+    contractorId: blockValues.consignee.contractorId || (sourceDoc?.contractorId ?? ''),
+    date: ukdDate,
+    amount: formatMoney(totals.total),
+    vat: formatMoney(totals.vat),
+    // Документ уходит на подпись — под чип «На подпись»
+    status: 'awaiting_client',
+    sourceDocId,
+  })
 
   const handlePrimary = () => {
     if (step === 'review') {
@@ -359,6 +383,7 @@ export default function App() {
         showAlert('error', REQUEST_ERROR)
         return
       }
+      setDocuments((prev) => [createdDocument(prev.length), ...prev])
       setResultOpen(true)
       return
     }
@@ -367,7 +392,8 @@ export default function App() {
       const nothingPicked =
         selectedBlockList.length === 0 && !(itemsOn && selectedItemIds.length > 0)
       setAttempted((prev) => ({ ...prev, document: true }))
-      if (sourceDocId === null || nothingPicked) return
+      const numberMissing = ukdNumber.trim() === ''
+      if (sourceDocId === null || nothingPicked || numberMissing || ukdDateError(ukdDate)) return
     }
 
     if (step === 'items') {
@@ -403,7 +429,7 @@ export default function App() {
 
       {screen === 'list' && (
         <DocumentListScreen
-          documents={LIST_DOCUMENTS}
+          documents={documents}
           onCreate={() => setCreateDrawerOpen(true)}
           onOpenDocument={(id) => {
             setDetailDocId(id)
