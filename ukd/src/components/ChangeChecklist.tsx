@@ -1,4 +1,4 @@
-import { ActionFormCell, Checkbox, FormCell, Switch } from '@ds'
+import { ActionFormCell, FormCell, Switch } from '@ds'
 import type { BlockValues, CorrectionBlock, CorrectionBlockId } from '../types'
 
 interface ChangeChecklistProps {
@@ -16,11 +16,7 @@ interface ChangeChecklistProps {
   error?: string
 }
 
-/**
- * Блок «Что изменилось» — узел 4788:107434.
- * Круглый чекбокс брать не надо: в ките у Checkbox уже
- * `--checkbox-radius: 50%`.
- */
+/** Блок «Что изменилось» — узел 4788:107434 */
 export function ChangeChecklist({
   blocks,
   sourceValues,
@@ -52,7 +48,7 @@ export function ChangeChecklist({
 
       <div className="ukd-checklist">
         {blocks.map((block, index) => (
-          /* Checkbox презентационный: клик обрабатывает строка — иначе он
+          /* Свитч презентационный: клик обрабатывает строка — иначе он
              всплывает до обработчика строки и переключает дважды */
           <div
             key={block.id}
@@ -65,7 +61,7 @@ export function ChangeChecklist({
               title={block.title}
               description={block.summarize(sourceValues[block.id])}
               variant={stackVariant(index)}
-              right={<Checkbox isChecked={selectedBlocks[block.id]} label={block.title} />}
+              right={<Switch isSelected={selectedBlocks[block.id]} label={block.title} />}
             />
           </div>
         ))}

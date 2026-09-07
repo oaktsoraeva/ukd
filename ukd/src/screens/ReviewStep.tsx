@@ -39,6 +39,7 @@ export function ReviewStep({
 
       {!isEmpty && (
         <FormCell
+          className="ukd-review-toggle"
           title="Показать значения до корректировки"
           right={
             <Switch
@@ -59,10 +60,9 @@ export function ReviewStep({
       ) : (
         <>
           {pairs.length > 0 && (
+            /* Заголовков у групп на обзоре нет: пары и позиции читаются
+               по подписям полей (узел 4978:152263) */
             <div className="ukd-group">
-              <div className="ukd-group__header">
-                <h2 className="ts-600-xl ukd-group__title">Корректировка документа</h2>
-              </div>
               <div className="ukd-review">
                 {pairs.map((pair) => (
                   <div key={pair.label} className="ukd-review__pair">
@@ -77,9 +77,6 @@ export function ReviewStep({
 
           {items.length > 0 && (
             <div className="ukd-group">
-              <div className="ukd-group__header">
-                <h2 className="ts-600-xl ukd-group__title">Позиции</h2>
-              </div>
               <div className="ukd-review ukd-review--items">
                 {items.map((item) => (
                   <div key={item.id} className="ukd-review__item">

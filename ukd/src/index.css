@@ -741,15 +741,35 @@ body {
   color: var(--primitive-secondary);
 }
 
+/* Строка свитча на обзоре — узел 4978:152265. Высота 52: она задана
+   строкой текста и отступами 16px, а переключатель на 32px выходит за неё
+   сверху и снизу, не растягивая. Кит же даёт строке расти под свитч */
+.form-cell.ukd-review-toggle {
+  --form-cell-padding-y: var(--spacing-4x);
+}
+
+.ukd-review-toggle .form-cell__right {
+  height: 20px;
+}
+
 /* ── Панель итогов — узел 4867:92597 ─────────────────────────────────── */
 
 .ukd-totals {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-2x);
-  padding: var(--spacing-5x);
+  /* Метрики узла 4867:92597: отступы 12/20, строки через 12 */
+  gap: var(--spacing-3x);
+  padding: var(--spacing-3x) var(--spacing-5x);
   border-radius: var(--card-rounding);
   background: var(--bg-neutral-1);
+  /*
+   * PageLayout даёт верхний отступ страницы только контенту, а rightPanel
+   * оставляет прижатым к навигации. В макете панель начинается на одной
+   * линии с заголовком, поэтому отступ добавляем сами. Ниже 1024 кит
+   * растягивает панель на всю ширину, и этот же отступ отделяет её от
+   * контента сверху
+   */
+  margin-top: var(--page-top-padding);
 }
 
 .ukd-totals__row {
@@ -763,19 +783,10 @@ body {
   color: var(--primitive-secondary);
 }
 
-/* Итог отделён от строк и набран крупнее */
+/* Итог отделён от строк и набран крупнее: разделитель, 12px, строка 26px */
 .ukd-totals__row--total {
-  margin-top: var(--spacing-2x);
-  padding-top: var(--spacing-4x);
+  padding-top: var(--spacing-3x);
   border-top: 1px solid var(--bg-neutral-2);
-}
-
-/* Ниже 1024 кит растягивает rightPanel на всю ширину — панель встаёт
-   карточкой над футером */
-@media (max-width: 1023px) {
-  .ukd-totals {
-    margin-top: var(--content-group-list-spacing);
-  }
 }
 
 /* Четыре поля в ряд не помещаются на узких экранах (узел 4867:52558).

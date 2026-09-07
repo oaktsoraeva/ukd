@@ -22,8 +22,9 @@ export function ItemsTotalsPanel({ totals }: { totals: ItemsTotals }) {
         </div>
       ))}
       <div className="ukd-totals__row ukd-totals__row--total">
-        <span className="ts-500-l">Итого</span>
-        <span className="ts-500-l">{formatMoney(totals.total)}</span>
+        {/* Строка итога в макете 26px — это TTN 600/XL, а не 500/L */}
+        <span className="ts-600-xl">Итого</span>
+        <span className="ts-600-xl">{formatMoney(totals.total)}</span>
       </div>
     </aside>
   )
