@@ -801,8 +801,10 @@ body {
   /* Метрики узла 4867:92597: отступы 12/20, строки через 12 */
   gap: var(--spacing-3x);
   padding: var(--spacing-3x) var(--spacing-5x);
-  border-radius: var(--card-rounding);
-  background: var(--bg-neutral-1);
+  border-radius: var(--form-rounding);
+  /* Панель без заливки, с рамкой в 1px. Обводку рисуем внутренней тенью:
+     в Figma она inside и на раскладку не влияет, а border сдвинул бы строки */
+  box-shadow: inset 0 0 0 1px var(--primitive-neutral-2);
   /*
    * PageLayout даёт верхний отступ страницы только контенту, а rightPanel
    * оставляет прижатым к навигации. В макете панель начинается на одной
@@ -815,19 +817,16 @@ body {
 
 .ukd-totals__row {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: var(--spacing-4x);
 }
 
-.ukd-totals__label {
-  color: var(--primitive-secondary);
-}
-
-/* Итог отделён от строк и набран крупнее: разделитель, 12px, строка 26px */
+/* Итог отделён от строк и набран крупнее: разделитель, 12px, строка 26px.
+   Разделитель в узле 4867:92597 — 0,5px translucent-neutral-2 */
 .ukd-totals__row--total {
   padding-top: var(--spacing-3x);
-  border-top: 1px solid var(--bg-neutral-2);
+  border-top: 0.5px solid var(--translucent-primitives-neutral-2);
 }
 
 /* Четыре поля в ряд не помещаются на узких экранах (узел 4867:52558).

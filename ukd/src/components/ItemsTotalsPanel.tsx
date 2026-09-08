@@ -17,8 +17,9 @@ export function ItemsTotalsPanel({ totals }: { totals: ItemsTotals }) {
     <aside className="ukd-totals">
       {rows.map((row) => (
         <div key={row.label} className="ukd-totals__row">
+          {/* Подпись TTN 400/M, значение TTN 500/M — обе primary, не серые */}
           <span className="ts-400-m ukd-totals__label">{row.label}</span>
-          <span className="ts-400-m ukd-totals__value">{row.value}</span>
+          <span className="ts-500-m ukd-totals__value">{row.value}</span>
         </div>
       ))}
       <div className="ukd-totals__row ukd-totals__row--total">
