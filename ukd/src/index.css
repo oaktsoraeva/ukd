@@ -296,23 +296,45 @@ body {
   position: static;
 }
 
+/* В макете 4888:143043 модалка 630px, а кит ограничивает высоту 620 —
+   контент терял 10px, и подвал поднимался */
+.ukd-result-modal {
+  --modal-max-height: 630px;
+}
+
 /* Modal сам даёт горизонтальные отступы контенту — обнуляем,
-   раскладку задаёт .ukd-result (узел 4624:91118) */
+   раскладку задаёт .ukd-result (узел 4888:143045) */
 .ukd-result-modal .modal__content-inner {
   padding: 0;
 }
 
+/* Подвал в макете 4888:143046: отступы 20 по кругу, кнопка 48 против 50 */
+.ukd-result-modal .modal-footer {
+  padding: var(--spacing-5x);
+}
+
+.ukd-result-modal .modal-footer .button {
+  --button-height: 48px;
+}
+
+/* Метрики Flow Result View из узла 4888:143045: отступы 20/40/32,
+   от аватара до заголовка 40, внутри контента 32 */
 .ukd-result {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-8x);
-  padding: var(--spacing-2x) var(--spacing-8x) var(--spacing-6x);
+  padding: var(--spacing-5x) var(--spacing-10x) var(--spacing-8x);
+}
+
+/* 32px общего зазора плюс 8 — до заголовка получается 40 */
+.ukd-result > .avatar {
+  margin-bottom: var(--spacing-2x);
 }
 
 .ukd-result__content {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-4x);
+  gap: var(--spacing-8x);
 }
 
 .ukd-result__title,
@@ -324,10 +346,14 @@ body {
   color: var(--primitive-primary);
 }
 
+/* Строки действий идут вплотную, каждая высотой 62 — узел 4888:143611 */
 .ukd-result__actions {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-6x);
+}
+
+.ukd-result__actions .link-cell {
+  min-height: 62px;
 }
 
 /* ── Экран списка «Документооборот» (узел 1195:34185) ────────────────── */

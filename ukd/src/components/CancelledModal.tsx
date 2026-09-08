@@ -7,9 +7,10 @@ interface CancelledModalProps {
 }
 
 /**
- * «Создание документа отменено» — узел 4888:144170.
+ * «Создание документа отменено».
  * Как и у ResultModal, китовый FlowResultView не подошёл: его футер зашит
- * на «Готово», а в макете кнопка «Закрыть». Разметку и стили переиспользуем.
+ * на «Готово», а в макете кнопка «Закрыть». Разметку, стили и типографику
+ * переиспользуем — это тот же Flow Result View, что в узле 4888:143045.
  */
 export function CancelledModal({ isOpen, onClose }: CancelledModalProps) {
   return (
@@ -39,8 +40,8 @@ export function CancelledModal({ isOpen, onClose }: CancelledModalProps) {
         />
 
         <div className="ukd-result__content">
-          <h2 className="ts-600-2xl ukd-result__title">Создание документа отменено</h2>
-          <p className="ts-400-s ukd-result__text">
+          <h2 className="ts-600-4xl ukd-result__title">Создание документа отменено</h2>
+          <p className="ts-400-m ukd-result__text">
             Удалили черновик УКД, потому что в нём нет корректировок.
           </p>
         </div>

@@ -17,7 +17,7 @@ const ACTIONS = [
 ]
 
 /**
- * «Документ создан!» — узел 4624:91118.
+ * «Документ создан!» — узел 4888:143041.
  * Китовый FlowResultView не подошёл: у него футер жёстко зашит на «Готово»
  * и нет кнопки закрытия, а в макете нужны крестик и «Подписать и отправить».
  * Собираем из тех же примитивов кита.
@@ -49,15 +49,16 @@ export function ResultModal({
           icon={<Checkmark />}
           style={
             {
-              '--avatar-surface': 'var(--bg-success-1)',
+              /* В макете подложка на ступень глубже: #c9eee3 */
+              '--avatar-surface': 'var(--bg-success-2)',
               '--avatar-color': 'var(--primitive-success)',
             } as React.CSSProperties
           }
         />
 
         <div className="ukd-result__content">
-          <h2 className="ts-600-2xl ukd-result__title">Документ создан!</h2>
-          <p className="ts-400-s ukd-result__text">
+          <h2 className="ts-600-4xl ukd-result__title">Документ создан!</h2>
+          <p className="ts-400-m ukd-result__text">
             Сохранили его для вас в ЭДО. {contractorName} получит документ, когда вы его подпишете.
           </p>
         </div>
@@ -68,7 +69,7 @@ export function ResultModal({
               key={action.label}
               title={action.label}
               icon={action.icon}
-              size="m"
+              size="l"
               onClick={() => onAction(action.label)}
             />
           ))}
