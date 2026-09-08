@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { ActionSheet, ActionSheetButton, ActionSheetFooter, ActionSheetHeader } from '@ds'
 import { Trash } from '@ds/icons'
+import { DsIcon } from './ui/DsIcon'
 
 export interface ConfirmCopy {
   title: string
@@ -36,7 +37,7 @@ export function ConfirmActionSheet({ copy, onClose, onConfirm }: ConfirmActionSh
       <ActionSheetButton
         title={shown?.action ?? 'Удалить'}
         variant="danger"
-        icon={<Trash />}
+        icon={<DsIcon><Trash /></DsIcon>}
         onClick={onConfirm}
       />
     </ActionSheet>

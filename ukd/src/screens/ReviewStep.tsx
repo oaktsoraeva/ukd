@@ -77,7 +77,7 @@ export function ReviewStep({
 
           {items.length > 0 && (
             <div className="ukd-group">
-              <div className="ukd-review ukd-review--items">
+              <div className="ukd-review">
                 {items.map((item) => (
                   <div key={item.id} className="ukd-review__item">
                     <div className="ukd-review__item-head">

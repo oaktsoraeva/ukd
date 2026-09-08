@@ -1,5 +1,6 @@
 import { ActionFormCell } from '@ds'
 import { ArrowUpUnderline, PlusCircle } from '@ds/icons'
+import { DsIcon } from '../components/ui/DsIcon'
 import { ItemSection } from '../components/ItemSection'
 import type { ItemValues, LineItem } from '../types'
 
@@ -46,13 +47,13 @@ export function ItemsStep({
         <ActionFormCell
           title="Добавить позицию"
           variant="stack-top"
-          left={<PlusCircle />}
+          left={<DsIcon><PlusCircle /></DsIcon>}
           onClick={onAddItem}
         />
         <ActionFormCell
           title="Загрузить коды маркировки"
           variant="stack-bottom"
-          left={<ArrowUpUnderline />}
+          left={<DsIcon><ArrowUpUnderline /></DsIcon>}
           onClick={onUploadCodes}
         />
       </div>

@@ -19,11 +19,11 @@ export function SectionHeader({ title, prevValue, onDelete }: SectionHeaderProps
   return (
     <div className="ukd-section__header">
       <div className="ukd-section__titles">
-        <h2 className="ts-600-xl ukd-section__title">{title}</h2>
+        <h2 className="ts-500-xl ukd-section__title">{title}</h2>
         {prevValue && <p className="ts-400-s ukd-section__prev">Было: {prevValue}</p>}
       </div>
       <button type="button" className="ukd-section__delete" onClick={onDelete}>
-        <span className="ds-icon ds-icon--s" aria-hidden="true">
+        <span className="ds-icon ds-icon--m" aria-hidden="true">
           <Trash />
         </span>
         <span className="visually-hidden">Удалить из корректировки</span>

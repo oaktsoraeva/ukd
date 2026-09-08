@@ -36,6 +36,13 @@ body {
   background-color: var(--category-indigo);
 }
 
+/* Кнопки верхней навигации не задают color, поэтому глифы наследуют
+   дефолтный чёрный у <button>. В макете 1195:34186 они #191919 */
+.main-page-navigation-bar__customer-select,
+.main-page-navigation-bar__action-button {
+  color: var(--primitive-primary);
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -58,12 +65,12 @@ body {
   gap: var(--content-group-list-spacing);
 }
 
-/* Заголовок с подзаголовком — своя группа с отступом 8px внутри,
-   чтобы до следующего блока сохранялся общий ритм страницы */
+/* Заголовок с подзаголовком — своя группа с отступом 10px внутри
+   (узел 4978:152264), чтобы до следующего блока сохранялся ритм страницы */
 .ukd-page__header {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-2x);
+  gap: var(--spacing-2-5x);
 }
 
 .ukd-page__title,
@@ -696,10 +703,11 @@ body {
   gap: var(--spacing-4x);
 }
 
+/* Внутри XL-заголовка зазор 2px: 26 + 2 + 18 = 46 (узел 4827:88375) */
 .ukd-section__titles {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-1x);
+  gap: var(--spacing-0-5x);
   min-width: 0;
 }
 
@@ -773,10 +781,11 @@ body {
 }
 
 /* Строки GTIN и «Итого»: в макете это такие же плашки, как поля, но с одной
-   строкой текста вместо подписи и ввода. Геометрия повторяет Input:
-   12px + 20px + 12px = 44px */
+   строкой текста 14/18 вместо подписи и ввода. Высота плашки задана 44
+   (узел 4840:36359), отступы 12/20 дают 42 — добираем min-height */
 .ukd-item__row {
   margin: 0;
+  min-height: 44px;
   padding: var(--spacing-3x) var(--spacing-5x);
   background: var(--container-transparent-1);
   color: var(--primitive-secondary);
@@ -876,17 +885,12 @@ body {
 .ukd-review__fields {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--spacing-3x);
+  gap: var(--content-element-list-spacing);
 }
 
 /* Прежнее значение изменённого поля */
 .ukd-review__was {
   color: var(--primitive-secondary);
-}
-
-/* Позиции перечисляются с отступом побольше, чем поля внутри одной */
-.ukd-review--items {
-  gap: var(--content-group-list-spacing);
 }
 
 @media (max-width: 1023px) {

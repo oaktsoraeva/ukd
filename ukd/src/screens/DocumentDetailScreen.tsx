@@ -11,6 +11,7 @@ import {
   Trash,
 } from '@ds/icons'
 import { docStatusLabel } from '../components/DocStatusText'
+import { DsIcon } from '../components/ui/DsIcon'
 import { CONTRACTORS } from '../data'
 import type { ListDocStatus, ListDocument } from '../types'
 
@@ -141,7 +142,7 @@ export function DocumentDetailScreen({
                 description={`УКД корректирует стоимость товаров, работ или услуг в ${
                   document.kind === 'upd' ? 'УПД' : 'счёте-фактуре'
                 }`}
-                leftAccessory={<DocumentListAcsPlus />}
+                leftAccessory={<DsIcon><DocumentListAcsPlus /></DsIcon>}
                 onClick={onCreateUkd}
               />
             )}
@@ -150,7 +151,7 @@ export function DocumentDetailScreen({
                 key={action.label}
                 title={action.label}
                 hasDescription={false}
-                leftAccessory={action.icon}
+                leftAccessory={<DsIcon>{action.icon}</DsIcon>}
                 onClick={onNotImplemented}
               />
             ))}
@@ -158,7 +159,7 @@ export function DocumentDetailScreen({
               title="Удалить"
               hasDescription={false}
               variant="danger"
-              leftAccessory={<Trash />}
+              leftAccessory={<DsIcon><Trash /></DsIcon>}
               onClick={onNotImplemented}
             />
           </div>

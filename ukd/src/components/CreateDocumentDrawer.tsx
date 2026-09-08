@@ -104,7 +104,7 @@ export function CreateDocumentDrawer({
           return (
             <div key={group} className="ukd-group">
               {GROUP_TITLES[group] && (
-                <h2 className="ts-600-xl ukd-group__title">{GROUP_TITLES[group]}</h2>
+                <h2 className="ts-500-xl ukd-group__title">{GROUP_TITLES[group]}</h2>
               )}
               <div className="ukd-doc-types">
                 {types.map((type) => (

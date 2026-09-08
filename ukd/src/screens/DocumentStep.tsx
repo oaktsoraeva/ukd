@@ -71,7 +71,7 @@ export function DocumentStep({
 
       <div className="ukd-group">
         <div className="ukd-group__header">
-          <h2 className="ts-600-xl ukd-group__title">УКД</h2>
+          <h2 className="ts-500-xl ukd-group__title">УКД</h2>
         </div>
         <FieldRow>
           <Input

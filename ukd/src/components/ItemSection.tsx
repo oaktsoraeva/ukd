@@ -50,7 +50,7 @@ export function ItemSection({ item, index, errors, onChange, onDelete }: ItemSec
         />
 
         {/* GTIN в макете — не поле, а строка текста на такой же плашке */}
-        {hasCodes && <p className="ts-400-m ukd-item__row">GTIN: {item.gtin}</p>}
+        {hasCodes && <p className="ts-400-s ukd-item__row">GTIN: {item.gtin}</p>}
 
         <div className="ukd-field-grid">
           <Input
@@ -109,7 +109,7 @@ export function ItemSection({ item, index, errors, onChange, onDelete }: ItemSec
         </div>
 
         {/* Построчный итог без НДС — тоже плашка, узел 4827:109373 */}
-        <p className="ts-400-m ukd-item__row">Итого: {formatMoney(itemTotal(item))}</p>
+        <p className="ts-400-s ukd-item__row">Итого: {formatMoney(itemTotal(item))}</p>
       </div>
     </section>
   )
