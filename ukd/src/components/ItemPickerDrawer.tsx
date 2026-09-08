@@ -32,10 +32,13 @@ export function ItemPickerDrawer({
       className="ukd-picker-drawer"
       header={<DrawerHeader title="Выбор позиций" onClose={onClose} />}
       footer={
-        <DrawerFooter
-          layout="1-button"
-          primaryAction={{ label: 'Применить', onClick: onApply, isSelected: true }}
-        />
+        /* Пока ничего не выбрано, применять нечего — кнопки нет вовсе */
+        selected.length > 0 ? (
+          <DrawerFooter
+            layout="1-button"
+            primaryAction={{ label: 'Применить', onClick: onApply, isSelected: true }}
+          />
+        ) : undefined
       }
     >
       <div className="drawer-body">
