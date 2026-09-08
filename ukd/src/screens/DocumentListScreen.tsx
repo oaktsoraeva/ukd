@@ -171,7 +171,13 @@ export function DocumentListScreen({
 
               return (
                 <div key={doc.id} className="ukd-card-row">
-                  <div className="ukd-card-row__main">
+                  {/* В карточной раскладке строка тоже открывает документ */}
+                  <div
+                    className="ukd-card-row__main"
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => onOpenDocument(doc.id)}
+                  >
                     <p className="ts-500-l ukd-card-row__title">{doc.title}</p>
                     <p className="ts-400-s ukd-card-row__meta">{contractor?.listName ?? '—'}</p>
                     <p className="ts-400-s ukd-card-row__meta">{doc.date}</p>

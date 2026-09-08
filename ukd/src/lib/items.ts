@@ -80,3 +80,8 @@ export function itemsTotals(items: ItemValues[]): ItemsTotals {
 
   return { quantity, kizQuantity, vat, total: net + vat }
 }
+
+/** Сумма документа-основания без НДС — для карточки «Связанные документы» */
+export function sourceDocTotal(doc: { items: ItemValues[] }): number {
+  return doc.items.reduce((sum, item) => sum + toNumber(item.quantity) * toNumber(item.price), 0)
+}

@@ -1,28 +1,94 @@
-import { Avatar, Cell, Footer, NavigationBar, PageAction, PageLayout, Tag } from '@ds'
+import { Avatar, Footer, NavigationBar, PageAction, PageLayout, Tag } from '@ds'
 import {
   ArrowDownUnderline,
-  ArrowRightTopOutgoingSquare,
   ArrowRotationLeft,
-  Chain,
-  DocumentListAcsPlus,
-  Envelope,
-  FileListShortReverse,
   Cards,
+  Chain,
+  Envelope,
+  Pencil,
+  Printer,
   Trash,
 } from '@ds/icons'
-import { docStatusLabel } from '../components/DocStatusText'
+import filePdf from '../assets/file-pdf.svg'
+import docPaid from '../assets/logos/doc-paid.png'
 import { DsIcon } from '../components/ui/DsIcon'
-import { CONTRACTORS } from '../data'
+import { NavigatorCard, type NavigatorRow } from '../components/ui/NavigatorCard'
+import { CONTRACTORS, DOC_STATUS, EDO_OPERATOR, SOURCE_DOCS } from '../data'
+import { formatMoney } from '../lib/format'
+import { sourceDocTotal } from '../lib/items'
 import type { ListDocStatus, ListDocument } from '../types'
 
-/** Цвет тега статуса — узел 4428:76370 */
-const STATUS_TAG: Record<ListDocStatus, string> = {
-  signed: 'ukd-tag--success',
-  awaiting_client: 'ukd-tag--neutral',
-  annulment_in_progress: 'ukd-tag--neutral',
-  withdrawn: 'ukd-tag--error',
-  rejected: 'ukd-tag--error',
-  annulled: 'ukd-tag--error',
+/** Бейдж статуса под заголовком — узел 5040:12720 */
+const STATUS_BADGE: Record<ListDocStatus, { label: string; tone: string }> = {
+  awaiting_client: { label: 'Ждёт вашей подписи', tone: 'ukd-tag--brand' },
+  awaiting_counterparty: { label: 'Ждёт подписи контрагента', tone: 'ukd-tag--neutral' },
+  signed: { label: 'Подписано', tone: 'ukd-tag--success' },
+  annulment_in_progress: { label: 'В процессе аннуляции', tone: 'ukd-tag--neutral' },
+  withdrawn: { label: 'Отозвано вами', tone: 'ukd-tag--error' },
+  rejected: { label: 'Отклонено контрагентом', tone: 'ukd-tag--error' },
+  annulled: { label: 'Аннулировано', tone: 'ukd-tag--error' },
+}
+
+const ACTION_ICONS = {
+  link: <Chain />,
+  mail: <Envelope />,
+  download: <ArrowDownUnderline />,
+  print: <Printer />,
+  duplicate: <Cards />,
+  edit: <Pencil />,
+  history: <ArrowRotationLeft />,
+} as const
+
+type ActionKey = keyof typeof ACTION_ICONS
+
+interface DetailAction {
+  key: ActionKey
+  label: string
+}
+
+const LINK = (kind: string): DetailAction => ({
+  key: 'link',
+  label: `Ссылка на ${kind}`,
+})
+
+const MAIL: DetailAction = { key: 'mail', label: 'Отправить на почту' }
+const HISTORY: DetailAction = { key: 'history', label: 'История' }
+
+/**
+ * Набор действий и кнопка подвала зависят от статуса — узлы 5040:12725
+ * (ждёт вашей подписи), 5040:12772 (ждёт контрагента), 5040:12806 (подписано)
+ */
+function actionsFor(status: ListDocStatus, kind: string): DetailAction[] {
+  if (status === 'awaiting_client') {
+    return [
+      LINK(kind),
+      MAIL,
+      { key: 'download', label: 'Скачать' },
+      { key: 'print', label: 'Распечатать' },
+      { key: 'duplicate', label: 'Дублировать' },
+      { key: 'edit', label: 'Редактировать' },
+      HISTORY,
+    ]
+  }
+  if (status === 'signed') {
+    return [
+      LINK(kind),
+      MAIL,
+      { key: 'download', label: 'Скачать архив' },
+      { key: 'duplicate', label: 'Дублировать' },
+      HISTORY,
+    ]
+  }
+  return [LINK(kind), MAIL, { key: 'download', label: 'Скачать архив' }, HISTORY]
+}
+
+/** Кнопка подвала: подписываем сами, иначе отзываем или аннулируем */
+function footerFor(status: ListDocStatus) {
+  if (status === 'awaiting_client') {
+    return { label: 'Подписать и отправить', isPrimary: true }
+  }
+  if (status === 'signed') return { label: 'Аннулировать', isPrimary: false }
+  return { label: 'Отозвать', isPrimary: false }
 }
 
 const KIND_TITLES: Record<string, string> = {
@@ -44,31 +110,36 @@ const KIND_LABELS: Record<string, string> = {
 interface DocumentDetailScreenProps {
   document: ListDocument
   onBack: () => void
-  onCreateUkd: () => void
+  onSign: () => void
   onNotImplemented: () => void
 }
 
-/** Точка входа: карточка документа — узел 4428:76370 */
+/** Детализация документа — узел 5040:12714 */
 export function DocumentDetailScreen({
   document,
   onBack,
-  onCreateUkd,
+  onSign,
   onNotImplemented,
 }: DocumentDetailScreenProps) {
   const contractor = CONTRACTORS.find((c) => c.id === document.contractorId)
   const kindTitle = KIND_TITLES[`${document.direction}-${document.kind}`] ?? 'Документ'
   const shortTitle = document.title.replace(/^(УПД|УКД|Счёт-фактура)\s/, '')
   const docLabel = KIND_LABELS[document.kind] ?? 'документ'
+  const badge = STATUS_BADGE[document.status]
+  const footer = footerFor(document.status)
 
-  const actions = [
-    { label: 'Отправить в 1С', icon: <ArrowRightTopOutgoingSquare /> },
-    { label: `Ссылка на ${docLabel}`, icon: <Chain /> },
-    { label: 'Отправить на почту', icon: <Envelope /> },
-    { label: 'Скачать архив', icon: <ArrowDownUnderline /> },
-    { label: 'Дублировать', icon: <Cards /> },
-    { label: 'Создать связанный документ', icon: <DocumentListAcsPlus /> },
-    { label: 'История', icon: <ArrowRotationLeft /> },
-  ]
+  const basis = SOURCE_DOCS.find((d) => d.id === document.sourceDocId)
+
+  const linkedRows: NavigatorRow[] = basis
+    ? [
+        {
+          subtitle: DOC_STATUS[basis.status].label,
+          title: basis.title,
+          description: formatMoney(sourceDocTotal(basis)),
+          accessory: <img className="ukd-navigator__tile" src={docPaid} width={40} height={40} alt="" />,
+        },
+      ]
+    : []
 
   return (
     <>
@@ -95,63 +166,61 @@ export function DocumentDetailScreen({
               Сумма: {document.amount}&emsp;НДС: {document.vat}
             </p>
             <div className="ukd-detail__badge">
-              <Tag shape="square" size="s" className={`ukd-tag ${STATUS_TAG[document.status]}`}>
-                {docStatusLabel(document.status)}
+              <Tag shape="square" size="s" className={`ukd-tag ${badge.tone}`}>
+                {badge.label}
               </Tag>
             </div>
           </div>
 
           <div className="ukd-detail__cards">
-            <div className="ukd-card">
-              <p className="ts-500-l ukd-card__title">Контрагент</p>
-              <Cell
-                title={contractor?.listName ?? '—'}
-                description={`ИНН: ${contractor?.inn ?? '—'}`}
-                leftAccessory={
-                  <Avatar
-                    className="ukd-avatar"
-                    label={contractor?.initials}
-                    size="m"
-                    style={{ '--avatar-surface': contractor?.color } as React.CSSProperties}
-                  />
-                }
-                hasRightAccessory={false}
-              />
-            </div>
+            <NavigatorCard
+              title="Контрагент"
+              rows={[
+                {
+                  title: contractor?.listName ?? '—',
+                  description: `ИНН: ${contractor?.inn ?? '—'}\n${EDO_OPERATOR}`,
+                  accessory: (
+                    <Avatar
+                      className="ukd-avatar"
+                      label={contractor?.initials}
+                      size="m"
+                      style={{ '--avatar-surface': contractor?.color } as React.CSSProperties}
+                    />
+                  ),
+                },
+              ]}
+            />
 
-            <div className="ukd-card">
-              <p className="ts-500-l ukd-card__title">Документ</p>
-              <Cell
-                title={document.title}
-                leftAccessory={
-                  <span className="ds-icon ds-icon--m ukd-card__doc-icon" aria-hidden="true">
-                    <FileListShortReverse />
-                  </span>
-                }
-                hasRightAccessory={false}
-              />
-            </div>
+            <NavigatorCard
+              title="Документ"
+              rows={[
+                {
+                  title: document.title,
+                  accessory: (
+                    <img
+                      className="ukd-navigator__tile ukd-navigator__tile--file"
+                      src={filePdf}
+                      width={24}
+                      height={24}
+                      alt=""
+                    />
+                  ),
+                },
+              ]}
+            />
+
+            {linkedRows.length > 0 && (
+              <NavigatorCard title="Связанные документы" rows={linkedRows} />
+            )}
           </div>
 
           <div className="ukd-detail__actions">
-            {/* Главное действие сценария — с описанием, как в макете.
-                Сам УКД корректировать нечем, поэтому у него его нет */}
-            {document.kind !== 'ukd' && (
-              <PageAction
-                title="Оформить УКД"
-                description={`УКД корректирует стоимость товаров, работ или услуг в ${
-                  document.kind === 'upd' ? 'УПД' : 'счёте-фактуре'
-                }`}
-                leftAccessory={<DsIcon><DocumentListAcsPlus /></DsIcon>}
-                onClick={onCreateUkd}
-              />
-            )}
-            {actions.map((action) => (
+            {actionsFor(document.status, docLabel).map((action) => (
               <PageAction
                 key={action.label}
                 title={action.label}
                 hasDescription={false}
-                leftAccessory={<DsIcon>{action.icon}</DsIcon>}
+                leftAccessory={<DsIcon>{ACTION_ICONS[action.key]}</DsIcon>}
                 onClick={onNotImplemented}
               />
             ))}
@@ -167,9 +236,12 @@ export function DocumentDetailScreen({
       </PageLayout>
 
       <Footer
-        className="ukd-footer--neutral"
+        className={footer.isPrimary ? undefined : 'ukd-footer--neutral'}
         layout="1-button"
-        primaryAction={{ label: 'Аннулировать', onClick: onNotImplemented }}
+        primaryAction={{
+          label: footer.label,
+          onClick: footer.isPrimary ? onSign : onNotImplemented,
+        }}
       />
     </>
   )

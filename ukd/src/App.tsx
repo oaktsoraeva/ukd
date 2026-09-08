@@ -13,6 +13,7 @@ import { ItemsTotalsPanel } from './components/ItemsTotalsPanel'
 import { ConfirmActionSheet, type ConfirmCopy } from './components/ConfirmActionSheet'
 import { PageAlert, type PageAlertState } from './components/PageAlert'
 import { ResultModal } from './components/ResultModal'
+import { SignedModal } from './components/SignedModal'
 import { CancelledModal } from './components/CancelledModal'
 import { availableBlocks, BLOCK_IDS } from './blocks'
 import {
@@ -107,6 +108,8 @@ export default function App() {
   const [pickerDraft, setPickerDraft] = useState<string[] | null>(null)
   const [confirm, setConfirm] = useState<ConfirmKind | null>(null)
   const [resultOpen, setResultOpen] = useState(false)
+  /** «Документ подписан!» — узел 5056:72518 */
+  const [signedOpen, setSignedOpen] = useState(false)
   const [cancelledOpen, setCancelledOpen] = useState(false)
   /** Свитч «Показать значения до корректировки» на обзоре, по умолчанию выключен */
   const [showPrevValues, setShowPrevValues] = useState(false)
@@ -176,6 +179,10 @@ export default function App() {
   )
   const reviewList = useMemo(() => reviewItems(selectedItems), [selectedItems])
   const reviewIsEmpty = reviewPairs.length === 0 && reviewList.length === 0
+
+  /** Контрагент открытого документа — для текста «Документ подписан!» */
+  const detailContractorName =
+    CONTRACTORS.find((c) => c.id === detailDocument?.contractorId)?.name ?? 'Контрагент'
 
   const resultContractorName =
     CONTRACTORS.find((c) => c.id === blockValues.consignee.contractorId)?.name ?? 'Контрагент'
@@ -346,6 +353,18 @@ export default function App() {
     setConfirm(null)
   }
 
+  /**
+   * Подписание из детализации — узел 5040:12714. Свою подпись поставили,
+   * дальше документ ждёт контрагента (узел 5040:12761)
+   */
+  const handleSign = () => {
+    if (!detailDocId) return
+    setDocuments((prev) =>
+      prev.map((d) => (d.id === detailDocId ? { ...d, status: 'awaiting_counterparty' } : d)),
+    )
+    setSignedOpen(true)
+  }
+
   const handleApplyPicker = () => {
     const picked = pickerDraft ?? []
     setSelectedItemIds(picked)
@@ -451,11 +470,7 @@ export default function App() {
         <DocumentDetailScreen
           document={detailDocument}
           onBack={() => setScreen('list')}
-          onCreateUkd={() =>
-            detailDocument.sourceDocId
-              ? handleStartFromSource(detailDocument.sourceDocId)
-              : handleStartBlank()
-          }
+          onSign={handleSign}
           onNotImplemented={() => window.alert(NOT_IMPLEMENTED)}
         />
       )}
@@ -565,6 +580,13 @@ export default function App() {
           setCancelledOpen(false)
           setScreen('list')
         }}
+      />
+
+      <SignedModal
+        isOpen={signedOpen}
+        contractorName={detailContractorName}
+        onClose={() => setSignedOpen(false)}
+        onAction={() => window.alert(NOT_IMPLEMENTED)}
       />
 
       <ResultModal

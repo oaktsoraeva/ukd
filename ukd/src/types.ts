@@ -158,6 +158,8 @@ export interface SourceDoc {
 export type ListDocStatus =
   | 'signed'
   | 'awaiting_client'
+  /** Мы подписали, ждём контрагента — узел 5040:12761 */
+  | 'awaiting_counterparty'
   | 'annulment_in_progress'
   | 'withdrawn'
   | 'rejected'

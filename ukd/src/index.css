@@ -502,9 +502,15 @@ body {
 
 /* ── Карточка документа (узел 4428:76370) ────────────────────────────── */
 
+/* Бейдж статуса стоит на 16px ниже подзаголовка и сам 20px высотой
+   (узел 5040:12718). Китовый Tag на размере s даёт 15 */
 .ukd-detail__badge {
   display: flex;
-  padding-top: var(--spacing-1x);
+  padding-top: var(--spacing-1-5x);
+}
+
+.ukd-detail__badge .tag {
+  min-height: 20px;
 }
 
 .ukd-detail__cards {
@@ -525,34 +531,20 @@ body {
   padding: var(--spacing-3x) 0;
 }
 
-/* Карточка-навигатор: в ките Widget тянет за собой свой заголовок и минимальную
-   высоту, а в макете это просто белая карточка с подписью и одной строкой */
-.ukd-card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-3x);
-  padding: var(--spacing-4x) var(--spacing-5x);
-  border-radius: var(--card-rounding);
-  background: var(--container-default);
-  box-shadow: var(--Card);
-}
-
-.ukd-card__title {
-  margin: 0;
-}
-
-.ukd-card__doc-icon {
-  color: var(--primitive-error);
-}
-
 /* Tag красится через свои же переменные, а не форком компонента */
 .tag.ukd-tag--success {
   --tag-surface-color: var(--bg-success-1);
   --tag-text-color: var(--primitive-success);
 }
 
+/* «Ждёт вашей подписи» — узел 5040:12720: подложка bg-brand-2 */
+.tag.ukd-tag--brand {
+  --tag-surface-color: var(--bg-brand-2);
+  --tag-text-color: var(--primitive-brand);
+}
+
 .tag.ukd-tag--neutral {
-  --tag-surface-color: var(--bg-neutral-2);
+  --tag-surface-color: var(--bg-neutral-3);
   --tag-text-color: var(--primitive-secondary);
 }
 
@@ -800,6 +792,75 @@ body {
 
 .ukd-review-toggle .form-cell__right {
   height: 20px;
+}
+
+/* ── Карточка-навигатор — узел 5040:12722 ─────────────────────────────
+   Белая плашка с тенью Card, заголовок с отступом 20 сверху и по бокам,
+   список строк в 8px отступе со своим скруглением 8px */
+
+.ukd-navigator {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--card-rounding);
+  background: var(--container-default);
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.05);
+}
+
+.ukd-navigator__title {
+  margin: 0;
+  padding: var(--spacing-5x) var(--spacing-5x) 0;
+}
+
+.ukd-navigator__list {
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-2x);
+}
+
+.ukd-navigator__row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-3x);
+  padding: var(--spacing-3x);
+  border-radius: var(--cell-rounding-weak);
+}
+
+.ukd-navigator__accessory {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.ukd-navigator__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-0-5x);
+  min-width: 0;
+}
+
+.ukd-navigator__name {
+  color: var(--primitive-primary);
+}
+
+/* ИНН и оператор ЭДО идут двумя строками — узел 5040:12722 */
+.ukd-navigator__meta {
+  white-space: pre-line;
+  color: var(--primitive-secondary);
+}
+
+/* Плитка связанного документа — готовый логотип 192px из ~/Documents/Claude/Логотипы */
+.ukd-navigator__tile {
+  display: block;
+  border-radius: var(--rounding-2-5x);
+}
+
+/* Графика типа файла лежит на нейтральной плитке 32px — узел 5040:12723 */
+.ukd-navigator__tile--file {
+  box-sizing: content-box;
+  padding: var(--spacing-1x);
+  border-radius: var(--rounding-2x);
+  background: var(--bg-neutral-1);
 }
 
 /* ── Панель итогов — узел 4867:92597 ─────────────────────────────────── */
