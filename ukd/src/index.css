@@ -381,6 +381,12 @@ body {
   background: var(--container-transparent-2);
 }
 
+/* Инициалы на цветной подложке белые — узел 4827:91214.
+   Кит по умолчанию красит их в secondary, что на цвете читается плохо */
+.avatar.ukd-avatar {
+  --avatar-color: var(--primitive-default);
+}
+
 /* Icon-only кнопки (в UI-ките такого компонента нет) */
 
 .icon-button {

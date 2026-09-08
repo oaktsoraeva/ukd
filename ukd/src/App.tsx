@@ -49,6 +49,13 @@ const WIZARD_STEPS: StepId[] = ['document', 'blocks', 'items', 'review']
 const noBlocksSelected = (): Record<CorrectionBlockId, boolean> =>
   Object.fromEntries(BLOCK_IDS.map((id) => [id, false])) as Record<CorrectionBlockId, boolean>
 
+/**
+ * Номер следующего УКД. В макете 4788:88953 поле пустое с плейсхолдером,
+ * но номер присваивает система, поэтому подставляем его сразу — как и дату
+ */
+const nextUkdNumber = (docs: ListDocument[]): string =>
+  String(docs.filter((d) => d.kind === 'ukd').length + 1)
+
 const noAttempts = (): Record<StepId, boolean> =>
   Object.fromEntries(WIZARD_STEPS.map((id) => [id, false])) as Record<StepId, boolean>
 
@@ -180,7 +187,7 @@ export default function App() {
   const resetWizard = () => {
     const reset = emptyPrefill()
     setSourceDocId(null)
-    setUkdNumber('')
+    setUkdNumber(nextUkdNumber(documents))
     setUkdDate(TODAY)
     setSelectedBlocks(noBlocksSelected())
     setItemsOn(false)

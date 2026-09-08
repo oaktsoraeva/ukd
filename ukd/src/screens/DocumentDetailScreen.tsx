@@ -108,6 +108,7 @@ export function DocumentDetailScreen({
                 description={`ИНН: ${contractor?.inn ?? '—'}`}
                 leftAccessory={
                   <Avatar
+                    className="ukd-avatar"
                     label={contractor?.initials}
                     size="m"
                     style={{ '--avatar-surface': contractor?.color } as React.CSSProperties}
