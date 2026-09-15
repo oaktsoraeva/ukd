@@ -912,10 +912,21 @@ body {
 /* ── «Проверка данных» — узел 4888:136205 ─────────────────────────────
    Пары «подпись сверху, значение снизу» и строки позиций с суммой справа */
 
+/* Пары идут через 16, позиции — через 32, а между группами 48 (узел 5360:93409) */
+.ukd-review-groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12x);
+}
+
 .ukd-review {
   display: flex;
   flex-direction: column;
   gap: var(--content-element-list-spacing);
+}
+
+.ukd-review--items {
+  gap: var(--content-group-list-spacing);
 }
 
 .ukd-review__pair,

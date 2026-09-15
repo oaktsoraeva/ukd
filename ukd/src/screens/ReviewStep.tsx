@@ -34,7 +34,8 @@ export function ReviewStep({
           onAction={onRestart}
         />
       ) : (
-        <>
+        /* Обе группы обзора лежат в одном блоке с зазором 48 — узел 5360:93409 */
+        <div className="ukd-review-groups">
           {pairs.length > 0 && (
             /* Заголовков у групп на обзоре нет: пары и позиции читаются
                по подписям полей (узел 4978:152263) */
@@ -53,7 +54,7 @@ export function ReviewStep({
 
           {items.length > 0 && (
             <div className="ukd-group">
-              <div className="ukd-review">
+              <div className="ukd-review ukd-review--items">
                 {items.map((item) => (
                   <div key={item.id} className="ukd-review__item">
                     <div className="ukd-review__item-head">
@@ -81,7 +82,7 @@ export function ReviewStep({
               </div>
             </div>
           )}
-        </>
+        </div>
       )}
     </div>
   )
