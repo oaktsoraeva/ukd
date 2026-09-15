@@ -13,7 +13,7 @@ interface BlocksStepProps {
   dateAnchor: string
 }
 
-/** Шаг «Корректировка документа» — узел 4827:88387 */
+/** Шаг «Правки в документе» — узел 4827:88387 */
 export function BlocksStep({
   blocks,
   blockValues,
@@ -27,7 +27,7 @@ export function BlocksStep({
   return (
     <div className="ukd-page">
       <div className="ukd-page__header">
-        <h1 className="ts-600-4xl ukd-page__title">Корректировка документа</h1>
+        <h1 className="ts-600-4xl ukd-page__title">Правки в документе</h1>
       </div>
 
       {blocks.map((block) => (

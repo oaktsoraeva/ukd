@@ -53,11 +53,8 @@ export function CorrectionSection({
 
   return (
     <section className="ukd-section">
-      <SectionHeader
-        title={block.title}
-        prevValue={block.summarize(sourceValues)}
-        onDelete={onDelete}
-      />
+      {/* Подписи «Было: …» под заголовком в финальных макетах нет — узел 4827:88387 */}
+      <SectionHeader title={block.editTitle} onDelete={onDelete} />
       <div className="ukd-fields">{body()}</div>
     </section>
   )

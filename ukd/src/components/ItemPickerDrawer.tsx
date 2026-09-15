@@ -13,7 +13,7 @@ interface ItemPickerDrawerProps {
   onApply: () => void
 }
 
-/** Дровер «Выбор позиций» — узел 4788:107929 */
+/** Дровер «Позиции для корректировки» — узел 4788:107929 */
 export function ItemPickerDrawer({
   draft,
   items,
@@ -30,7 +30,7 @@ export function ItemPickerDrawer({
       isOpen={draft !== null}
       onClose={onClose}
       className="ukd-picker-drawer"
-      header={<DrawerHeader title="Выбор позиций" onClose={onClose} />}
+      header={<DrawerHeader title="Позиции для корректировки" onClose={onClose} />}
       footer={
         /* Пока ничего не выбрано, применять нечего — кнопки нет вовсе */
         selected.length > 0 ? (

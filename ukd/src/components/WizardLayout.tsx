@@ -41,7 +41,7 @@ export function WizardLayout({
         rightPanel={rightPanel}
         navigationBar={
           <NavigationBar
-            title="Новый УКД"
+            title="Новая корректировка"
             rootLinkLabel="Документооборот"
             hasDescription={false}
             hasActionButton={false}

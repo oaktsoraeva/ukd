@@ -2,8 +2,8 @@ import type { StepDescriptor, StepId } from '../types'
 
 const LABELS: Record<StepId, string> = {
   document: 'Документ',
-  blocks: 'Корректировка документа',
-  items: 'Корректировка позиций',
+  blocks: 'Правки в документе',
+  items: 'Правки в позициях',
   review: 'Проверка данных',
 }
 

@@ -22,7 +22,9 @@ export function reviewBlockPairs(
   return blocks.map((block) => {
     const value = block.summarize(blockValues[block.id]) || '—'
     const was = block.summarize(sourceValues[block.id])
-    return was && was !== value ? { label: block.title, value, was } : { label: block.title, value }
+    return was && was !== value
+      ? { label: block.editTitle, value, was }
+      : { label: block.editTitle, value }
   })
 }
 

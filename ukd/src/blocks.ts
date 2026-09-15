@@ -153,6 +153,7 @@ export const CORRECTION_BLOCKS: CorrectionBlock[] = [
     // отгрузке, корректировать его отдельным пунктом внутри УКД нечего
     id: 'shipment',
     title: 'Документ об отгрузке',
+    editTitle: 'Новый документ об отгрузке',
     body: 'schema',
     fields: [DOC_NAME_FIELD, NUM_FIELD, DATE_FIELD],
     onlyForKind: 'invoice',
@@ -163,6 +164,7 @@ export const CORRECTION_BLOCKS: CorrectionBlock[] = [
     // доставки, как было в прошлой версии сценария (узел 4827:88396)
     id: 'consignee',
     title: 'Грузополучатель',
+    editTitle: 'Новый грузополучатель',
     body: 'party',
     fields: [
       PARTY_PICKER_FIELD,

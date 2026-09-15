@@ -659,6 +659,12 @@ body {
   }
 }
 
+/* GTIN в описании позиции идёт отдельной строкой — узел 4788:107929 */
+.ukd-picker-list .cell__description,
+.ukd-picker-list .ds-cell__description {
+  white-space: pre-line;
+}
+
 /* ── Дровер «Выбор позиций» — узел 4788:107929 ────────────────────────
    Строки идут одной карточкой без зазоров, кликается вся полоса */
 
@@ -781,17 +787,6 @@ body {
   padding: var(--spacing-3x) var(--spacing-5x);
   background: var(--container-transparent-1);
   color: var(--primitive-secondary);
-}
-
-/* Строка свитча на обзоре — узел 4978:152265. Высота 52: она задана
-   строкой текста и отступами 16px, а переключатель на 32px выходит за неё
-   сверху и снизу, не растягивая. Кит же даёт строке расти под свитч */
-.form-cell.ukd-review-toggle {
-  --form-cell-padding-y: var(--spacing-4x);
-}
-
-.ukd-review-toggle .form-cell__right {
-  height: 20px;
 }
 
 /* ── Карточка-навигатор — узел 5040:12722 ─────────────────────────────

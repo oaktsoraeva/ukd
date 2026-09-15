@@ -102,8 +102,10 @@ export type BlockBodyKind = 'schema' | 'party'
 
 export interface CorrectionBlock {
   id: CorrectionBlockId
-  /** «Документ об отгрузке» — заголовок и в чеклисте шага 1, и в секции шага 2 */
+  /** «Документ об отгрузке» — заголовок пункта в чеклисте шага 1 */
   title: string
+  /** «Новый документ об отгрузке» — заголовок секции правок и пары в обзоре */
+  editTitle: string
   body: BlockBodyKind
   fields: FieldSchema[]
   /**

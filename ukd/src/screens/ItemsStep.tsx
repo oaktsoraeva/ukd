@@ -14,7 +14,7 @@ interface ItemsStepProps {
   onUploadCodes: () => void
 }
 
-/** Шаг «Корректировка позиций» — узел 4827:109373 */
+/** Шаг «Правки в позициях» — узел 4827:109373 */
 export function ItemsStep({
   items,
   errors,
@@ -26,7 +26,7 @@ export function ItemsStep({
   return (
     <div className="ukd-page">
       <div className="ukd-page__header">
-        <h1 className="ts-600-4xl ukd-page__title">Корректировка позиций</h1>
+        <h1 className="ts-600-4xl ukd-page__title">Правки в позициях</h1>
       </div>
 
       {/* Между позициями 24px, а не общий шаг страницы в 32px — узел 4840:36815 */}

@@ -16,7 +16,7 @@ interface ChangeChecklistProps {
   error?: string
 }
 
-/** Блок «Что изменилось» — узел 4788:107434 */
+/** Блок «Что нужно изменить» — узел 4788:107434 */
 export function ChangeChecklist({
   blocks,
   sourceValues,
@@ -35,14 +35,16 @@ export function ChangeChecklist({
    * отдельных стека. Пункты блоков идут первыми, за ними тоггл позиций и
    * переход к их выбору
    */
-  const rowCount = blocks.length + 2
+  /* Строка «Выбрать позиции» появляется только вместе с включённым
+     тумблером — узел 4788:109961, где её нет */
+  const rowCount = blocks.length + (itemsOn ? 2 : 1)
   const stackVariant = (index: number) =>
     index === 0 ? 'stack-top' : index === rowCount - 1 ? 'stack-bottom' : 'stack-middle'
 
   return (
     <div className="ukd-group">
       <div className="ukd-group__header">
-        <h2 className="ts-500-xl ukd-group__title">Что изменилось</h2>
+        <h2 className="ts-500-xl ukd-group__title">Что нужно изменить</h2>
         {error && <p className="ts-400-s ukd-group__error">{error}</p>}
       </div>
 
@@ -67,19 +69,19 @@ export function ChangeChecklist({
         ))}
 
         <FormCell
-          title="Изменились позиции"
-          description="Корректировка товаров и услуг"
+          title="Позиции"
+          description="Добавить или изменить товары, работы или услуги"
           variant={stackVariant(blocks.length)}
-          right={
-            <Switch isSelected={itemsOn} onChange={onToggleItems} label="Изменились позиции" />
-          }
+          right={<Switch isSelected={itemsOn} onChange={onToggleItems} label="Позиции" />}
         />
-        <ActionFormCell
-          title="К выбору позиций"
-          description={`Выбрано ${selectedItemCount} из ${sourceItemCount}`}
-          variant={stackVariant(blocks.length + 1)}
-          onClick={onOpenPicker}
-        />
+        {itemsOn && (
+          <ActionFormCell
+            title="Выбрать позиции"
+            description={`Нужно скорректировать ${selectedItemCount} из ${sourceItemCount}`}
+            variant={stackVariant(blocks.length + 1)}
+            onClick={onOpenPicker}
+          />
+        )}
       </div>
     </div>
   )

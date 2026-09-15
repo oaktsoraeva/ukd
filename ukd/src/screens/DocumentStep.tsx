@@ -71,11 +71,11 @@ export function DocumentStep({
 
       <div className="ukd-group">
         <div className="ukd-group__header">
-          <h2 className="ts-500-xl ukd-group__title">УКД</h2>
+          <h2 className="ts-500-xl ukd-group__title">Корректировка</h2>
         </div>
         <FieldRow>
           <Input
-            label="Номер"
+            label="Номер УКД или КСФ"
             placeholder="№"
             value={ukdNumber}
             isError={Boolean(numberError)}
@@ -106,7 +106,7 @@ export function DocumentStep({
           selectedItemCount={selectedItemCount}
           sourceItemCount={sourceItemCount}
           onOpenPicker={onOpenPicker}
-          error={attempted && nothingPicked ? 'Выберите хотя бы один пункт для корректировки' : undefined}
+          error={attempted && nothingPicked ? 'Выберите хотя бы один вариант' : undefined}
         />
       )}
     </div>

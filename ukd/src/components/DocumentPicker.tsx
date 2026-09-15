@@ -9,7 +9,7 @@ interface DocumentPickerProps {
 }
 
 /**
- * «Основание УКД» — обязательный выбор УПД или счёта-фактуры
+ * «Основание» — обязательный выбор УПД или счёта-фактуры
  * (узлы 4774:67451 и 4788:110741). Подпись под полем постоянная и
  * при ошибке заменяется красной — это штатное поведение китового Dropdown.
  *
@@ -21,9 +21,9 @@ export function DocumentPicker({ value, onChange, isError, errorMessage }: Docum
 
   return (
     <Dropdown
-      label="Основание УКД"
+      label="Основание"
       placeholder="Название документа или контрагента"
-      description="Выберите УПД или счёт‑фактуру для корректировки"
+      description="Выберите УПД или счёт‑фактуру, который хотите скорректировать"
       value={selected?.title}
       isError={isError}
       errorMessage={errorMessage ?? 'Выберите УПД или счёт‑фактуру'}

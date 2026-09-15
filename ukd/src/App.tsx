@@ -111,8 +111,6 @@ export default function App() {
   /** «Документ подписан!» — узел 5056:72518 */
   const [signedOpen, setSignedOpen] = useState(false)
   const [cancelledOpen, setCancelledOpen] = useState(false)
-  /** Свитч «Показать значения до корректировки» на обзоре, по умолчанию выключен */
-  const [showPrevValues, setShowPrevValues] = useState(false)
   /** «Ошибка создания» срабатывает один раз, повторное нажатие проходит */
   const [createFailed, setCreateFailed] = useState(false)
   const [pageAlert, setPageAlert] = useState<PageAlertState | null>(null)
@@ -202,7 +200,6 @@ export default function App() {
     setPickerDraft(null)
     setConfirm(null)
     setCreateFailed(false)
-    setShowPrevValues(false)
     setBlockValues(reset.blockValues)
     setSourceValues(reset.sourceValues)
     setItems(reset.items)
@@ -535,8 +532,6 @@ export default function App() {
               items={reviewList}
               isEmpty={reviewIsEmpty}
               onRestart={() => setScreen('document')}
-              showPrev={showPrevValues}
-              onTogglePrev={setShowPrevValues}
             />
           )}
         </WizardLayout>

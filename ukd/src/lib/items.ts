@@ -23,14 +23,9 @@ export function itemVat(item: ItemValues): number | null {
  */
 export function itemSummary(item: ItemValues): string {
   const unit = UNITS.find((u) => u.id === item.unitId)?.label ?? 'ед. измер.'
-  const vat = itemVat(item)
-  const parts = [
-    `${formatQuantity(item.quantity) || '0'} ${unit}`,
-    formatMoney(itemTotal(item)),
-    vat === null ? 'без НДС' : `НДС: ${formatMoney(vat)}`,
-  ]
-  const tail = parts.join(', ')
-  return item.gtin ? `GTIN: ${item.gtin} ${tail}` : tail
+  /* В дровере суммы идут без НДС, а GTIN — отдельной строкой (узел 4788:107929) */
+  const tail = `${formatQuantity(item.quantity) || '0'} ${unit}, ${formatMoney(itemTotal(item))}, без НДС`
+  return item.gtin ? `GTIN: ${item.gtin}\n${tail}` : tail
 }
 
 
