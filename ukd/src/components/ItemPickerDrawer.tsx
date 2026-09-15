@@ -32,13 +32,16 @@ export function ItemPickerDrawer({
       className="ukd-picker-drawer"
       header={<DrawerHeader title="Позиции для корректировки" onClose={onClose} />}
       footer={
-        /* Пока ничего не выбрано, применять нечего — кнопки нет вовсе */
-        selected.length > 0 ? (
-          <DrawerFooter
-            layout="1-button"
-            primaryAction={{ label: 'Применить', onClick: onApply, isSelected: true }}
-          />
-        ) : undefined
+        /* Пустой выбор — это тоже решение: «Сохранить» гасит тумблер
+           «Позиции» и выходит из дровера */
+        <DrawerFooter
+          layout="1-button"
+          primaryAction={{
+            label: selected.length > 0 ? 'Применить' : 'Сохранить',
+            onClick: onApply,
+            isSelected: true,
+          }}
+        />
       }
     >
       <div className="drawer-body">
