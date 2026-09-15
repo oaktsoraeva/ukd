@@ -39,7 +39,7 @@ const DOC_TYPES: DocType[] = [
   { id: 'contract', group: 'main', title: 'Договор', description: 'Фиксирует договорённости между вами и контрагентом', icon: <DocumentList /> },
   { id: 'invoice', group: 'main', title: 'Счёт‑фактура', description: 'Отправляется вместе с актом или накладной и подтверждает сумму НДС', icon: <FileListShortReverseAcsPercent /> },
   { id: 'reconciliation', group: 'main', title: 'Акт сверки', description: 'Сверяет расчёты с контрагентами и проверяет наличие задолженностей', icon: <FileAcsMagnifier /> },
-  { id: UKD_ID, group: 'main', title: 'УКД', description: 'Корректирует стоимость товаров, работ или услуг в УПД или счёт‑фактуре', icon: <FileAcsPencil /> },
+  { id: UKD_ID, group: 'main', title: 'Корректировка', description: 'Позволяет оформить УКД или КСФ, чтобы изменить позиции и другие данные в УПД или счёте‑фактуре', icon: <FileAcsPencil /> },
   { id: 'requisites-addendum', group: 'main', title: 'Допсоглашение о смене реквизитов', description: 'Закрепляет новые реквизиты для действующей сделки', icon: <DocumentProfile /> },
 
   { id: 'estimate', group: 'build', title: 'Смета', description: 'Фиксирует перечень и стоимость работ', icon: <FileListShortReverseAcsChartBar /> },
@@ -71,7 +71,7 @@ interface CreateDocumentDrawerProps {
   onNotImplemented: (label: string) => void
 }
 
-/** Точка входа: дровер «Создать документ» — узел 4424:58101 */
+/** Точка входа: дровер «Новый документ» — узел 4424:58101 */
 export function CreateDocumentDrawer({
   isOpen,
   onClose,
@@ -86,7 +86,7 @@ export function CreateDocumentDrawer({
       isOpen={isOpen}
       onClose={onClose}
       className="ukd-create-drawer"
-      header={<DrawerHeader title="Создать документ" onClose={onClose} />}
+      header={<DrawerHeader title="Новый документ" onClose={onClose} />}
       footer={null}
     >
       <div className="drawer-body">

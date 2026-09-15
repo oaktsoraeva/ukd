@@ -386,7 +386,9 @@ export default function App() {
     title: `УКД №${ukdNumber} от ${ukdDate}`,
     contractorId: blockValues.consignee.contractorId || (sourceDoc?.contractorId ?? ''),
     date: ukdDate,
-    amount: formatMoney(totals.total),
+    /* «Сумма» в списке и в детализации — без НДС: в узле 5040:12719 это
+       424 800 ₽ при НДС 93 456 ₽ */
+    amount: formatMoney(totals.total - totals.vat),
     vat: formatMoney(totals.vat),
     // Документ уходит на подпись — под чип «На подпись»
     status: 'awaiting_client',

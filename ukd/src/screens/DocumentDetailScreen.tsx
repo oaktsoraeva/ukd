@@ -178,7 +178,7 @@ export function DocumentDetailScreen({
               rows={[
                 {
                   title: contractor?.listName ?? '—',
-                  description: `ИНН: ${contractor?.inn ?? '—'}\n${EDO_OPERATOR}`,
+                  description: `ИНН: ${contractor?.inn ?? '—'} ${EDO_OPERATOR}`,
                   accessory: (
                     <Avatar
                       className="ukd-avatar"
